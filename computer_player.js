@@ -1,3 +1,4 @@
+// implements the Player-interface for a computer
 function ComputerPlayer(){
     Player.call(this);
 }

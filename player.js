@@ -1,3 +1,4 @@
+// interface, which has to be implemented
 function Player(name, symbol){
     this.name = name;
     this.symbol = symbol;

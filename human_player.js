@@ -1,3 +1,4 @@
+// implements the Player-interface for a human
 function HumanPlayer(){
     Player.call(this);
 }
