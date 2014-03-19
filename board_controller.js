@@ -6,6 +6,6 @@ function BoardController(width, height){
 }
 
 BoardController.prototype.__init_field__ = function(width, height){
-    
-    return
+    // TODO: implement init
+    return 
 }

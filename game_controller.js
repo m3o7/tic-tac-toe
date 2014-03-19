@@ -1,7 +1,7 @@
 // responsible to keep track of the game state
 function GameController(players, board, rules, tag){
     this.players = players;
-    this.__current_player__ = 0;
+    this.__current_player__ = -1;
     this.board = board;
     this.rules = rules;
 
@@ -10,7 +10,8 @@ function GameController(players, board, rules, tag){
 }
 
 GameController.prototype.__next_player__ = function(){
-    this.__current_player__ = (this.players.length + 1 == this.__current_player__) ? 
+    // count up the internal pointer or reset it to zero
+    this.__current_player__ = (this.__current_player__ + 1 == this.players.length) ? 
         0 : this.__current_player__ + 1;
     return this.players[this.__current_player__];
 }
@@ -25,6 +26,8 @@ GameController.prototype.run = function(){
 // responsible to render the game
 function GameView(tag){
     this.tag = tag;
-    this.base = $("<div class='ttt_game'></div>");
-    $(tag).append(this.base);
+    getTemplate('game').then(function(base){
+        // render the game
+        $(tag).append(base);
+    });
 }

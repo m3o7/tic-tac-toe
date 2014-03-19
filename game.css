@@ -1,5 +1,5 @@
 /*the outer frame of the game (not the board)*/
-.ttt_game {
+.ttt-game {
     width: 500px;
     height: 500px;
     background-color: #eeeeee;
