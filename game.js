@@ -4,7 +4,8 @@ $(document).ready(function () {
     // setup
     var players = [
         new HumanPlayer('david'),
-        new ComputerPlayer('joshua')
+        new HumanPlayer('marco')
+        // new ComputerPlayer('joshua')
     ];
 
     var board = new BoardController(3, 3);

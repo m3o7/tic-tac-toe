@@ -19,15 +19,29 @@ GameController.prototype.__next_player__ = function(){
 GameController.prototype.run = function(){
     console.debug('starting the game');
 
-    var player = this.__next_player__();
+    while(!this.rules.is_finished){
+        // play another turn
+        var player = this.__next_player__();
+
+        break; // for debug
+    }
+
+    console.debug('game over');
 }
 
 
 // responsible to render the game
 function GameView(tag){
     this.tag = tag;
+
+    var cl_this = this; // closure
     getTemplate('game').then(function(base){
         // render the game
-        $(tag).append(base);
+        cl_this.base = $(base);
+        $(tag).append(cl_this.base);
     });
+}
+
+GameView.prototype.addContent(content){
+    this.tag.append(content);
 }
