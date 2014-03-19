@@ -1,3 +1,4 @@
+// CONTROLLER ==================================================================
 // responsible to keep track of the game state
 function GameController(players, board, rules, tag){
     this.players = players;
@@ -5,7 +6,12 @@ function GameController(players, board, rules, tag){
     this.board = board;
     this.rules = rules;
 
-    this.view = new GameView(tag);
+    this.view = new GameView(this, tag);
+    var cl_this = this; //closure
+    this.view.is_ready(function(){
+        // adding the board
+        cl_this.board.view.add_to(cl_this.view);
+    });
     console.debug('GameController initialized');
 }
 
@@ -29,19 +35,27 @@ GameController.prototype.run = function(){
     console.debug('game over');
 }
 
-
+// VIEW ========================================================================
 // responsible to render the game
-function GameView(tag){
-    this.tag = tag;
+function GameView(controller, tag){
+    this.tag = $(tag);
+    this.__ready_callbacks__ = [];
 
     var cl_this = this; // closure
     getTemplate('game').then(function(base){
         // render the game
         cl_this.base = $(base);
-        $(tag).append(cl_this.base);
+        cl_this.tag.append(cl_this.base);
+        cl_this.call_ready_callbacks();
     });
 }
 
-GameView.prototype.addContent(content){
-    this.tag.append(content);
+GameView.prototype.is_ready = function(callback){
+    this.__ready_callbacks__.push(callback);
+}
+
+GameView.prototype.call_ready_callbacks = function(){
+    for (var i = 0; i < this.__ready_callbacks__.length; i++) {
+        this.__ready_callbacks__[i]();
+    };
 }
