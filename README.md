@@ -8,7 +8,8 @@ example implementation of the game tic-tac-toe
 The first version of the game **tic-tac-toe** will be purely implemented in `JavaScript`. The purpose of this version is to get a quick version up and running and potentially learn from it for future versions.  
 I have thought about it for a bit and this should be the rough first (language agnostic) **architecture**:
 ```javascript
-class Game
+class GameController
+    // responsible to keep track of the game state
     + players
     + field
     + rules
@@ -16,12 +17,17 @@ class Game
     next_player()
     run()
 
-class Board
+class BoardController
+    // represents the game board - usually a 3x3
+    // board. It renders itself
     + size
     + fields
     init(size)
+    render()
 
 class Rules
+    // implements the game rules, in anticipation 
+    // of potentially changing/new game rules
     is_game_finished(board)
     get_winner(board)
 
@@ -37,3 +43,7 @@ class Human(Player)
 class Computer(Player)
     // implements the Player-interface
 ```
+
+Reasons of why the architecture looks the way it looks:
+* split the apps into logical pieces, so they can be swapped without breaking anything
+* anticipate some potential future features(e.g.: different board sizes, different rules, multi-player, different strength computer enemy...)
