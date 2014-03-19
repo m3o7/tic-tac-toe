@@ -3,6 +3,29 @@
     width: 500px;
     height: 500px;
     margin: auto;
+    vertical-align: middle;
 
     background-color: #eeeeee;
+}
+
+/*the game board*/
+.ttt-board {
+    width: 450px;
+    height: 450px;
+    margin: auto;
+
+    background-color: #ffffff;
+}
+
+.ttt-field {
+    float: left;
+    width: 148px;
+    height: 148px;
+
+    background-color: #eeeeee;
+    border: 1px solid #fff;
+}
+
+.ttt-field:hover {
+    background-color: #dddddd;
 }

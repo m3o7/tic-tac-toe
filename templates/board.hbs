@@ -1,1 +1,7 @@
-<div class="ttt-board">board</div>
+<div class="ttt-board">
+    {{#each controller.fields}}
+        {{#each this}}
+            <div class="ttt-field"></div>
+        {{/each}}
+    {{/each}}
+</div>

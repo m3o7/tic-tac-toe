@@ -23,14 +23,20 @@ function BoardView(controller){
 
 BoardView.prototype.add_to = function(view){
     this.tag = view.base;
-    this.update();
-}
-
-BoardView.prototype.update = function(){
+    
+    // render initially
     var cl_this = this; // closure
-    getTemplate('board').then(function(base){
+    getTemplate('board', this).then(function(base){
         // render the game
         cl_this.base = $(base);
         cl_this.tag.append(cl_this.base);
     });
-}   
+}
+
+// BoardView.prototype.update = function(){
+//     var cl_this = this; // closure
+//     getTemplate('board', this).then(function(base){
+//         // render the game
+//         cl_this.base = $(base);
+//     });
+// }
