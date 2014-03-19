@@ -13,17 +13,16 @@ class GameController
     + players
     + field
     + rules
-    init(players, field, rules)
+    init(players, board, rules)
     next_player()
     run()
 
 class BoardController
     // represents the game board - usually a 3x3
-    // board. It renders itself
+    // board
     + size
     + fields
     init(size)
-    render()
 
 class Rules
     // implements the game rules, in anticipation 
@@ -34,6 +33,7 @@ class Rules
 class Player
     // interface, which has to be implemented
     + name
+    + symbol
     init(name)
     make_move(board)
 
