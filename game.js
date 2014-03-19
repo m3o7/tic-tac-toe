@@ -1,12 +1,17 @@
-// setup
-var players = [
-    new HumanPlayer('david'),
-    new ComputerPlayer('joshua')
-];
+$(document).ready(function () {
+    // wait for the dome to get ready
 
-var board = new BoardController();
-var rules = new Rules();
-var game = new GameController(players, board, rules);
+    // setup
+    var players = [
+        new HumanPlayer('david'),
+        new HumanPlayer('marco')
+        // new ComputerPlayer('joshua')
+    ];
 
-// starting the game
-game.run();
+    var board = new BoardController(3, 3);
+    var rules = new Rules();
+    var game = new GameController(players, board, rules, 'body');
+
+    // starting the game
+    game.run();
+});
