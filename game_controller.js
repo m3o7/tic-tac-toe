@@ -2,6 +2,7 @@
 // responsible to keep track of the game state
 function GameController(players, board, rules, tag){
     this.players = players;
+    this.__game_started__ = false;
     this.__current_player__ = -1;
     this.board = board;
     this.rules = rules;
@@ -14,8 +15,10 @@ function GameController(players, board, rules, tag){
 
         // starting the game
         var c2_this = cl_this;
-        window.addEventListener('board-ready', function(){
+        window.addEventListener('board-ready', function start_game(){
             c2_this.start_new_turn();
+            // remove this listener, since its only needed for the initial part
+            window.removeEventListener('board-ready', start_game, false);
         });
     });
     console.debug('GameController initialized');
@@ -29,8 +32,6 @@ GameController.prototype.__next_player__ = function(){
 }
 
 GameController.prototype.start_new_turn = function(){
-    console.debug('start new turn');
-    
     // play another turn
     var player = this.__next_player__();
     player.make_move(this, this.board);
@@ -39,13 +40,21 @@ GameController.prototype.start_new_turn = function(){
 GameController.prototype.player_moved = function(){
     // called by the player
 
+    // re-render the board
+    this.board.view.update();
+
     // check if the game has ended
     if (this.rules.is_game_finished(this.board)) {
         console.log('game over');
         this.show_winner();
     } else {
         // if not, continue
-        this.start_new_turn();
+        var cl_this = this;
+        window.addEventListener('board-ready', function start_game(){
+            cl_this.start_new_turn();
+            // remove this listener, one time only event
+            window.removeEventListener('board-ready', start_game, false);
+        });
     }
 }
 

@@ -29,7 +29,7 @@ HumanPlayer.prototype.made_move = function(ui_field, board, game){
         // commit move
         board.fields[id1][id2] = this;
 
-        // deactivate all field listener
+        // deactivate all field listeners
         $('.ttt-field').unbind();
 
         // notify the game-controller about the move
@@ -38,6 +38,4 @@ HumanPlayer.prototype.made_move = function(ui_field, board, game){
         // try again
         console.debug('invalid move');
     }
-    
-    // 
 }

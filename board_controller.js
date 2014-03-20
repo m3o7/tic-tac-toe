@@ -21,9 +21,7 @@ function BoardView(controller){
     this.controller = controller;
 }
 
-BoardView.prototype.add_to = function(view){
-    this.tag = view.base;
-    
+BoardView.prototype.__render__ = function(){
     // render initially
     var cl_this = this; // closure
     getTemplate('board', this).then(function(base){
@@ -35,4 +33,16 @@ BoardView.prototype.add_to = function(view){
         var evt = new Event('board-ready');
         window.dispatchEvent(evt);
     });
+}
+
+BoardView.prototype.add_to = function(view){
+    this.tag = view.base;
+    this.__render__();
+}
+
+BoardView.prototype.update = function(){
+    // remove old field
+    this.base.remove();
+    // render new state
+    this.__render__();
 }

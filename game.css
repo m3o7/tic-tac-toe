@@ -1,11 +1,7 @@
 /*the outer frame of the game (not the board)*/
 .ttt-game {
-    width: 500px;
-    height: 500px;
     margin: auto;
     vertical-align: middle;
-
-    background-color: #eeeeee;
 }
 
 /*the game board*/
@@ -24,6 +20,11 @@
 
     background-color: #eeeeee;
     border: 1px solid #fff;
+
+    text-align: center;
+    line-height: 148px;
+    font-size: 150px;
+    font-family: arial;
 }
 
 .ttt-field:hover {
