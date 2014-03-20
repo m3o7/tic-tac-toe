@@ -11,7 +11,4 @@ $(document).ready(function () {
     var board = new BoardController(3, 3);
     var rules = new Rules();
     var game = new GameController(players, board, rules, 'body');
-
-    // starting the game
-    game.run();
 });

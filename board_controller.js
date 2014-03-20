@@ -30,13 +30,9 @@ BoardView.prototype.add_to = function(view){
         // render the game
         cl_this.base = $(base);
         cl_this.tag.append(cl_this.base);
+
+        // send out that the board is ready
+        var evt = new Event('board-ready');
+        window.dispatchEvent(evt);
     });
 }
-
-// BoardView.prototype.update = function(){
-//     var cl_this = this; // closure
-//     getTemplate('board', this).then(function(base){
-//         // render the game
-//         cl_this.base = $(base);
-//     });
-// }

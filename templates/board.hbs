@@ -1,7 +1,15 @@
 <div class="ttt-board">
     {{#each controller.fields}}
+        <div id="ttt-row-{{@index}}">
         {{#each this}}
-            <div class="ttt-field"></div>
+            <div id="ttt-column-{{@index}}" class="ttt-field">
+                {{#if this}}
+                    value
+                {{else}}
+                    empty
+                {{/if}}
+            </div>
         {{/each}}
+        </div>
     {{/each}}
 </div>

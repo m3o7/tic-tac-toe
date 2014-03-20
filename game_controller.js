@@ -11,6 +11,12 @@ function GameController(players, board, rules, tag){
     this.view.is_ready(function(){
         // adding the board
         cl_this.board.view.add_to(cl_this.view);
+
+        // starting the game
+        var c2_this = cl_this;
+        window.addEventListener('board-ready', function(){
+            c2_this.start_turn();
+        });
     });
     console.debug('GameController initialized');
 }
@@ -22,17 +28,16 @@ GameController.prototype.__next_player__ = function(){
     return this.players[this.__current_player__];
 }
 
-GameController.prototype.run = function(){
+GameController.prototype.start_turn = function(){
     console.debug('starting the game');
+    
+    // play another turn
+    var player = this.__next_player__();
+    player.make_move(this, this.board);
+}
 
-    while(!this.rules.is_finished){
-        // play another turn
-        var player = this.__next_player__();
-
-        break; // for debug
-    }
-
-    console.debug('game over');
+GameController.prototype.player_moved = function(){
+    // called by the player
 }
 
 // VIEW ========================================================================
