@@ -28,5 +28,11 @@
 }
 
 .ttt-field:hover {
-    background-color: #dddddd;
+    background-color: #00ff00;
+    cursor: pointer;
+}
+
+.ttt-unclickable:hover {
+    background-color: #ff0000;
+    cursor: default;
 }

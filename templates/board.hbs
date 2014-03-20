@@ -2,12 +2,14 @@
     {{#each controller.fields}}
         <div id="ttt-row-{{@index}}">
         {{#each this}}
-            <div id="ttt-column-{{@index}}" class="ttt-field">
-                {{#if this}}
+            {{#if this}}
+                <div id="ttt-column-{{@index}}" class="ttt-unclickable ttt-field">
                     {{this.symbol}}
-                {{else}}
-                {{/if}}
-            </div>
+                </div>
+            {{else}}
+                <div id="ttt-column-{{@index}}" class="ttt-field">
+                </div>
+            {{/if}}
         {{/each}}
         </div>
     {{/each}}
