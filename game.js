@@ -3,8 +3,8 @@ $(document).ready(function () {
 
     // setup
     var players = [
-        new HumanPlayer('david'),
-        new HumanPlayer('marco')
+        new HumanPlayer('david', 'X'),
+        new HumanPlayer('marco', 'O')
         // new ComputerPlayer('joshua')
     ];
 

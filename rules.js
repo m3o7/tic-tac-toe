@@ -4,6 +4,7 @@ function Rules(){
 }
 
 Rules.prototype.is_game_finished = function(){
+    return false;
 }
 
 Rules.prototype.get_winner = function(){

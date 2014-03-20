@@ -1,6 +1,6 @@
 // implements the Player-interface for a computer
-function ComputerPlayer(){
-    Player.call(this);
+function ComputerPlayer(name, symbol){
+    Player.call(this, name, symbol);
 }
 
 // inherit from Player
