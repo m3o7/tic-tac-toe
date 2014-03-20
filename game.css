@@ -25,6 +25,14 @@
     line-height: 148px;
     font-size: 150px;
     font-family: arial;
+
+    /*prevent text from being selected*/
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .ttt-field:hover {
