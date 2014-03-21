@@ -11,13 +11,23 @@ Rules.prototype.is_game_finished = function(board){
     // 2. check if there are three items in a row (horizontal, vertical)
     // 3. check for diagonals
     var fields = board.get_fields();
+    var any_field_empty = false;
     for (var i = 0; i < fields.length; i++) {
         if (this.__check_horizontal_line__(fields[i]) || 
-            this.__check_vertical_line__(fields[i])) {
+            this.__check_vertical_line__(fields[i]) || 
+            this.__check_cross_down_line__(fields[i]) ||
+            this.__check_cross_up_line__(fields[i])) {
             return true;
         }
+        // check if any field is empty, to indicate a tie
+        any_field_empty = any_field_empty || (typeof fields[i].value === 'undefined');
+    }
+    if (!any_field_empty) {
+        // a tie has been reached
+        return true;
     }
 
+    // nobody has won yet and there are still empty fields
     return false;
 }
 
@@ -44,6 +54,14 @@ Rules.prototype.__check_horizontal_line__ = function(field){
 
 Rules.prototype.__check_vertical_line__ = function(field){
     return this.__check_line__(field, 'get_lower_neighbor');
+}
+
+Rules.prototype.__check_cross_down_line__ = function(field){
+    return this.__check_line__(field, 'get_right_lower_neighbor');
+}
+
+Rules.prototype.__check_cross_up_line__ = function(field){
+    return this.__check_line__(field, 'get_right_upper_neighbor');
 }
 
 Rules.prototype.get_winner = function(){
