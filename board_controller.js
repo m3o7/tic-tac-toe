@@ -51,8 +51,7 @@ BoardView.prototype.__render__ = function(){
         cl_this.tag.append(cl_this.base);
 
         // send out that the board is ready
-        var evt = new Event('board-ready');
-        window.dispatchEvent(evt);
+        window.dispatchEvent(new Event('board-ready'));
     });
 }
 

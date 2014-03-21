@@ -1,6 +1,11 @@
 $(document).ready(function(){
     // wait for the dome to get ready
     start_new_game();
+
+    // listen for the game to end - to restart a new one
+    window.addEventListener('game-ended', function(){
+        start_new_game();
+    });
 });
 
 function start_new_game(){

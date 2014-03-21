@@ -84,8 +84,23 @@ GameView.prototype.call_ready_callbacks = function(){
 }
 
 GameView.prototype.show_winner = function(winner){
-    var cl_this = this;
+    var cl_this = this; //closure
     getTemplate('winner', winner).then(function(content){
-        cl_this.tag.append(content);
-    })
+        cl_this.base.append(content);
+
+        var c2_this = cl_this;
+        $(window).click(function game_ended(){
+            // player acknoledged outcome
+
+            // clean up
+            $(window).unbind();
+
+            c2_this.base.remove();
+
+            // notify game.js to start a new game
+            window.dispatchEvent(new Event('game-ended'));
+        });
+    });
+
+
 }
