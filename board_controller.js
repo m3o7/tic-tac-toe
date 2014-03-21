@@ -19,8 +19,12 @@ BoardController.prototype.__init_field__ = function(width, height){
     return fields;
 }
 
+BoardController.prototype.get_field = function(y, x){
+    return this.fields[y][x];
+}
+
 BoardController.prototype.get_field_value = function(y, x){
-    return this.fields[y][x].value;
+    return this.get_field(y, x).value;
 }
 
 BoardController.prototype.set_field_value = function(new_value, y, x){
