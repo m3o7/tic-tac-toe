@@ -1,0 +1,16 @@
+<div class="ttt-board">
+    {{#each controller.fields}}
+        <div id="ttt-row-{{@index}}">
+        {{#each this}}
+            {{#if this}}
+                <div id="ttt-field-{{@index}}" class="ttt-field">
+                    {{this.value.symbol}}
+                </div>
+            {{else}}
+                <div id="ttt-field-{{@index}}" class="ttt-active ttt-field">
+                </div>
+            {{/if}}
+        {{/each}}
+        </div>
+    {{/each}}
+</div>

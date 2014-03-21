@@ -1,34 +1,68 @@
+// CONTROLLER ==================================================================
 // represents the game board - usually a 3x3 board
 function BoardController(width, height){
     this.width = width;
     this.height = height;
     this.fields = this.__init_field__(this.width, this.height);
 
-    this.view = new BoardView();
+    this.view = new BoardView(this);
 }
 
 BoardController.prototype.__init_field__ = function(width, height){
     var fields = new Array(width);
-    for (var i = 0; i < width; i++) {
-        fields[i] = new Array(height);
+    for (var y = 0; y < width; y++) {
+        fields[y] = new Array(height);  
+        for (var x = 0; x < fields[y].length; x++) {
+            fields[y][x] = new Field(this, undefined, x, y);
+        };
     }
     return fields;
 }
 
-
-function BoardView(tag){
-    this.tag = tag;
+BoardController.prototype.get_field_value = function(y, x){
+    return this.fields[y][x].value;
 }
 
-BoardView.prototype.update = function(){
-    this.__render__();
+BoardController.prototype.set_field_value = function(new_value, y, x){
+    this.fields[y][x].value = new_value;
+}
+
+BoardController.prototype.get_fields = function(){
+    var field_iter = [];
+    for (var y = 0; y < this.fields.length; y++) {
+        for (var x = 0; x < this.fields[y].length; x++) {
+            field_iter.push(this.fields[y][x]);
+        }
+    }
+    return field_iter;
+}
+
+// VIEW ========================================================================
+function BoardView(controller){
+    this.controller = controller;
 }
 
 BoardView.prototype.__render__ = function(){
+    // render initially
     var cl_this = this; // closure
-    getTemplate('game').then(function(base){
+    getTemplate('board', this).then(function(base){
         // render the game
         cl_this.base = $(base);
-        $(cl_this.tag).append(cl_this.base);
+        cl_this.tag.append(cl_this.base);
+
+        // send out that the board is ready
+        window.dispatchEvent(new Event('board-ready'));
     });
+}
+
+BoardView.prototype.add_to = function(view){
+    this.tag = view.base;
+    this.__render__();
+}
+
+BoardView.prototype.update = function(){
+    // remove old field
+    this.base.remove();
+    // render new state
+    this.__render__();
 }

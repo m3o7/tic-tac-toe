@@ -5,8 +5,5 @@ function Player(name, symbol){
 }
 
 Player.prototype.make_move = function(board){
-    throw {
-        name: "NotImplementedError", 
-        message: "make_move needs to be implemented"
-    };
+    throw "NotImplementedError";
 } 
