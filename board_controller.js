@@ -10,10 +10,31 @@ function BoardController(width, height){
 
 BoardController.prototype.__init_field__ = function(width, height){
     var fields = new Array(width);
-    for (var i = 0; i < width; i++) {
-        fields[i] = new Array(height);
+    for (var y = 0; y < width; y++) {
+        fields[y] = new Array(height);  
+        for (var x = 0; x < fields[y].length; x++) {
+            fields[y][x] = new Field(this, undefined, x, y);
+        };
     }
     return fields;
+}
+
+BoardController.prototype.get_field_value = function(y, x){
+    return this.fields[y][x].value;
+}
+
+BoardController.prototype.set_field_value = function(new_value, y, x){
+    this.fields[y][x].value = new_value;
+}
+
+BoardController.prototype.get_fields = function(){
+    var field_iter = [];
+    for (var y = 0; y < this.fields.length; y++) {
+        for (var x = 0; x < this.fields[y].length; x++) {
+            field_iter.push(this.fields[y][x]);
+        }
+    }
+    return field_iter;
 }
 
 // VIEW ========================================================================

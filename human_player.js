@@ -20,14 +20,14 @@ HumanPlayer.prototype.made_move = function(ui_field, board, game){
     console.debug('player ' + this.name + ' made a move');
 
     // determine the field that was clicked
-    var id1 = parseInt(ui_field.parent().attr('id').split('-')[2]);
-    var id2 = parseInt(ui_field.attr('id').split('-')[2]);
-    var field = board.fields[id1][id2];
+    var y = parseInt(ui_field.parent().attr('id').split('-')[2]);
+    var x = parseInt(ui_field.attr('id').split('-')[2]);
+    var field_value = board.get_field_value(y, x);
 
     // was it a legal move? Is that field still available?
-    if (typeof field === 'undefined') {
+    if (typeof field_value === 'undefined') {
         // commit move
-        board.fields[id1][id2] = this;
+        board.set_field_value(this, y, x);
 
         // deactivate all field listeners
         $('.ttt-field').unbind();
