@@ -17,8 +17,8 @@ Rules.prototype.is_game_finished = function(board){
     for (var i = 0; i < fields.length; i++) {
         if (this.__check_horizontal_line__(fields[i]) || 
             this.__check_vertical_line__(fields[i]) || 
-            this.__check_cross_down_line__(fields[i]) ||
-            this.__check_cross_up_line__(fields[i])) {
+            this.__check_diagonale_down_line__(fields[i]) ||
+            this.__check_diagonale_up_line__(fields[i])) {
             return true;
         }
         // check if any field is empty, to indicate a tie
@@ -48,6 +48,8 @@ Rules.prototype.__check_line__ = function(field, next_function){
             next_field.value !== current_field.value) return false;
         current_field = next_field;
     }
+    // remember the winner
+    this.winner = current_field.value;
     return true;
 }
 
@@ -59,14 +61,15 @@ Rules.prototype.__check_vertical_line__ = function(field){
     return this.__check_line__(field, 'get_lower_neighbor');
 }
 
-Rules.prototype.__check_cross_down_line__ = function(field){
+Rules.prototype.__check_diagonale_down_line__ = function(field){
     return this.__check_line__(field, 'get_right_lower_neighbor');
 }
 
-Rules.prototype.__check_cross_up_line__ = function(field){
+Rules.prototype.__check_diagonale_up_line__ = function(field){
     return this.__check_line__(field, 'get_right_upper_neighbor');
 }
 
 Rules.prototype.get_winner = function(){
     // Return the winner of the game. If there is a tie return null
+    return this.winner;
 }

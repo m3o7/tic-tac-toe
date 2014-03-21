@@ -59,7 +59,12 @@ GameController.prototype.player_moved = function(){
 }
 
 GameController.prototype.show_winner = function(){
-
+    var winner = this.rules.get_winner();
+    if (typeof winner === 'undefined') {
+        console.debug('tie!');
+    } else {
+        console.debug(winner.name + ' is the winner!');
+    }
 }
 
 // VIEW ========================================================================
