@@ -46,7 +46,7 @@ GameController.prototype.player_moved = function(){
     // check if the game has ended
     if (this.rules.is_game_finished(this.board)) {
         console.log('game over');
-        this.show_winner();
+        this.view.show_winner(this.rules.get_winner());
     } else {
         // if not, continue
         var cl_this = this;
@@ -55,15 +55,6 @@ GameController.prototype.player_moved = function(){
             // remove this listener, one time only event
             window.removeEventListener('board-ready', start_game, false);
         });
-    }
-}
-
-GameController.prototype.show_winner = function(){
-    var winner = this.rules.get_winner();
-    if (typeof winner === 'undefined') {
-        console.debug('tie!');
-    } else {
-        console.debug(winner.name + ' is the winner!');
     }
 }
 
@@ -90,4 +81,11 @@ GameView.prototype.call_ready_callbacks = function(){
     for (var i = 0; i < this.__ready_callbacks__.length; i++) {
         this.__ready_callbacks__[i]();
     };
+}
+
+GameView.prototype.show_winner = function(winner){
+    var cl_this = this;
+    getTemplate('winner', winner).then(function(content){
+        cl_this.tag.append(content);
+    })
 }
