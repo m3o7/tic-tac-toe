@@ -12,7 +12,8 @@ Rules.prototype.is_game_finished = function(board){
     // 3. check for diagonals
     var fields = board.get_fields();
     for (var i = 0; i < fields.length; i++) {
-        if (this.__check_horizontal_line__(fields[i])) {
+        if (this.__check_horizontal_line__(fields[i]) || 
+            this.__check_vertical_line__(fields[i])) {
             return true;
         }
     }
@@ -20,7 +21,7 @@ Rules.prototype.is_game_finished = function(board){
     return false;
 }
 
-Rules.prototype.__check_horizontal_line__ = function(field){
+Rules.prototype.__check_line__ = function(field, next_function){
     if (typeof field.value === 'undefined') {
         // skip empty field
         return false;
@@ -29,12 +30,20 @@ Rules.prototype.__check_horizontal_line__ = function(field){
     var counter = this.item_count-1;
     var current_field = field;
     while(counter--){
-        var next_field = current_field.get_right_neighbor();
+        var next_field = current_field[next_function]();
         if(typeof next_field === 'undefined' ||
             next_field.value !== current_field.value) return false;
         current_field = next_field;
     }
     return true;
+}
+
+Rules.prototype.__check_horizontal_line__ = function(field){
+    return this.__check_line__(field, 'get_right_neighbor');
+}
+
+Rules.prototype.__check_vertical_line__ = function(field){
+    return this.__check_line__(field, 'get_lower_neighbor');
 }
 
 Rules.prototype.get_winner = function(){
