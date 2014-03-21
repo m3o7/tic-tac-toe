@@ -1,9 +1,11 @@
 // implements the game rules, in anticipation of potentially 
 // changing/new game rules
-function Rules(item_count){
+function Rules(win_count){
     // player who succeeds in placing three respective marks in a horizontal, 
     // vertical, or diagonal row wins the game
-    this.item_count = (typeof item_count === 'undefined') ? 3 : item_count;
+
+    // number of items (in a row) needed to win 
+    this.win_count = (typeof win_count === 'undefined') ? 3 : win_count;
 }
 
 Rules.prototype.is_game_finished = function(board){
@@ -32,12 +34,13 @@ Rules.prototype.is_game_finished = function(board){
 }
 
 Rules.prototype.__check_line__ = function(field, next_function){
+    // Return true if there are '3' items in a row of the same kind
     if (typeof field.value === 'undefined') {
-        // skip empty field
+        // skip empty fields
         return false;
     }
 
-    var counter = this.item_count-1;
+    var counter = this.win_count-1;
     var current_field = field;
     while(counter--){
         var next_field = current_field[next_function]();
