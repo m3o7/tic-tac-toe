@@ -56,32 +56,36 @@ ComputerPlayer.prototype.__get_first_empty_field__ = function(fields){
 ComputerPlayer.prototype.__get_all_row_combinations__ = function(board){
     // Return all Rows (horizontal, vertical, diagonal) that could hold
     // a winning combination
-    var rows = [];
 
-    
-    for (var y = 0; y < board.length; y++) {
-        // add horizontal line
-        rows.push(board[y]);
+    // TODO: remove hard-coding to 3x3 field - make it generic
+    return [
+        // horizontal
+        [ board.fields[0][0], board.fields[0][1], board.fields[0][2]],
+        [ board.fields[1][0], board.fields[1][1], board.fields[1][2]],
+        [ board.fields[2][0], board.fields[2][1], board.fields[2][2]],
 
-        // add vertical row
-        var vertical_row = [];
-        for (var x = 0; x < board.length; x++) {
-            vertical_row.push[y][x];
-        };
-        rows.push(vertical_row);
-    }
+        // vertical
+        [ board.fields[0][0], board.fields[1][0], board.fields[2][0]],
+        [ board.fields[0][1], board.fields[1][1], board.fields[2][1]],
+        [ board.fields[0][2], board.fields[1][2], board.fields[2][2]],
 
-    // diagonal
-    for (var i = 0; i < Things.length; i++) {
-        Things[i]
-    }
-
-    return rows;
+        // diagonals
+        [ board.fields[0][0], board.fields[1][1], board.fields[2][2]],
+        [ board.fields[0][2], board.fields[1][1], board.fields[2][0]],
+    ];
 }
 
 ComputerPlayer.prototype.__filter__ = function (rows){
+    var cl_this = this;
     return $.grep(rows, function(row){
-
+        // check for an undefined field value
+        var undef_count = 0;
+        var player_count = 0;
+        for (var i = 0; i < row.length; i++) {
+            undef_count += (typeof row[i].value === 'undefined');
+            player_count += (row[i].value === cl_this);
+        };
+        return undef_count === 1 && player_count === 2;
     });
 }
 
@@ -93,6 +97,13 @@ ComputerPlayer.prototype.__pick_win__ = function(board){
     var possible_rows = this.__filter__(row_comb);
 
     // pick the first undefined field
+    if (possible_rows.length > 0) {
+        // return the first best field to win with
+        return $.grep(possible_rows[0], function(field){
+            // filter the empty field out
+            return (typeof field.value === 'undefined');
+        })[0];
+    };
 }
 
 ComputerPlayer.prototype.__pick_center__ = function(board){
