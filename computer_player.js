@@ -2,8 +2,6 @@
 // TODO: currently the computer-player is hard-coded to a 3x3 field
 function ComputerPlayer(name, symbol){
     Player.call(this, name, symbol);
-
-    this.move_counter = 0;
 }
 
 // inherit from Player
@@ -25,7 +23,6 @@ ComputerPlayer.prototype.make_move = function(game, board){
 
     // commit the pick
     board.set_field_value(this, field.y, field.x);
-    this.move_counter += 1;
 
     // notify the game-controller about the move
     game.player_moved();
@@ -45,6 +42,7 @@ ComputerPlayer.prototype.__pick_field__ = function(board){
         // 5. Center
         this.__pick_center__(board) ||
         // 6. Opposite corner
+        this.__pick_opposite_corner__(board) ||
         // 7. Empty corner
         this.__pick_empty_corner__(board) ||
         // 8. Empty side
@@ -82,7 +80,7 @@ ComputerPlayer.prototype.__get_all_row_combinations__ = function(board){
 }
 
 ComputerPlayer.prototype.__filter__ = function (rows, counts){
-    var cl_this = this;
+    var cl_this = this; //closure
     return $.grep(rows, function(row){
         // check for an undefined field value
         var undef_count = 0;
@@ -155,6 +153,16 @@ ComputerPlayer.prototype.__get_fork__ = function(board, counts){
     }
 }
 
+ComputerPlayer.prototype.__get_corners__ = function(board){
+    var corners = [
+        board.get_field(0, 0),
+        board.get_field(0, board.width-1),
+        board.get_field(board.height-1, 0),
+        board.get_field(board.height-1, board.width-1),
+    ];
+    return corners;
+}
+
 ComputerPlayer.prototype.__pick_win__ = function(board){
     return this.__pick_combination__(board, {
         undef_count : 1,
@@ -195,14 +203,22 @@ ComputerPlayer.prototype.__pick_center__ = function(board){
     return center_open ? board.get_field(1,1) : undefined;
 }
 
-ComputerPlayer.prototype.__pick_empty_corner__ = function(board){
-    var corners = [
-        board.get_field(0, 0),
-        board.get_field(0, board.width-1),
-        board.get_field(board.height-1, 0),
-        board.get_field(board.height-1, board.width-1),
-    ];
+ComputerPlayer.prototype.__pick_opposite_corner__ = function(board){
+    var cl_this = this; // closure
+    var corners = this.__get_corners__(board);
+    var opponent_fields = $.grep(corners, function(field){
+        // return any field that is an opponents field
+        return (typeof field.value !== 'undefined' && field.value !== cl_this);
+    });
+    var valid_opp_fields = $.grep(opponent_fields, function(field){
+        // return any field that has an empty opposite field
+        return (typeof field.get_oppisite_field().value === 'undefined');
+    });
+    return (valid_opp_fields.length > 0) ? valid_opp_fields[0].get_oppisite_field() : undefined;
+}
 
+ComputerPlayer.prototype.__pick_empty_corner__ = function(board){
+    var corners = this.__get_corners__(board);
     return this.__get_first_empty_field__(corners);
 }
 

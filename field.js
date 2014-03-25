@@ -58,3 +58,10 @@ Field.prototype.get_right_lower_neighbor = function(){
         return lower.get_right_neighbor();
     };
 }
+
+Field.prototype.get_oppisite_field = function(){
+    // calculate the opposite
+    var y = 1 + (1 - this.y);
+    var x = 1 + (1 - this.x);
+    return this.board.get_field(y, x);
+}
