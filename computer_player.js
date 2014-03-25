@@ -2,6 +2,8 @@
 // TODO: currently the computer-player is hard-coded to a 3x3 field
 function ComputerPlayer(name, symbol){
     Player.call(this, name, symbol);
+
+    this.move_counter = 0;
 }
 
 // inherit from Player
@@ -23,6 +25,7 @@ ComputerPlayer.prototype.make_move = function(game, board){
 
     // commit the pick
     board.set_field_value(this, field.y, field.x);
+    this.move_counter += 1;
 
     // notify the game-controller about the move
     game.player_moved();
@@ -36,9 +39,11 @@ ComputerPlayer.prototype.__pick_field__ = function(board){
         // 2. Block
         this.__block__(board) ||
         // 3. Fork
+        this.__fork__(board) ||
         // 4. Block opponents fork
+        this.__block_fork__(board) ||
         // 5. Center
-        this.__pick_center__(board) || 
+        this.__pick_center__(board) ||
         // 6. Opposite corner
         // 7. Empty corner
         this.__pick_empty_corner__(board) ||
@@ -76,32 +81,35 @@ ComputerPlayer.prototype.__get_all_row_combinations__ = function(board){
     ];
 }
 
-ComputerPlayer.prototype.__filter__ = function (rows, pick_self){
+ComputerPlayer.prototype.__filter__ = function (rows, counts){
     var cl_this = this;
     return $.grep(rows, function(row){
         // check for an undefined field value
         var undef_count = 0;
-        var player_count = 0;
+        var self_count = 0;
+        var other_count = 0;
         for (var i = 0; i < row.length; i++) {
-            undef_count += (typeof row[i].value === 'undefined');
-            if (pick_self) {
-                player_count += (row[i].value === cl_this);
+            if (row[i].value === cl_this) {
+                self_count += 1;
+            } else if (typeof row[i].value === 'undefined'){
+                undef_count += 1;
             } else {
-                player_count += (row[i].value !== cl_this && 
-                    (typeof row[i].value !== 'undefined'));
-            }
-            
+                other_count += 1;
+            }           
         };
-        return undef_count === 1 && player_count === 2;
+        return (counts.undef_count === undef_count  &&
+                counts.self_count  === self_count   &&
+                counts.other_count === other_count
+        );
     });
 }
 
-ComputerPlayer.prototype.__pick_combination__ = function(board, pick_self){
+ComputerPlayer.prototype.__pick_combination__ = function(board, counts){
     // list all possible rows
     var row_comb = this.__get_all_row_combinations__(board);
 
     // filter the ones that have two fields of the player and one undefined
-    var possible_rows = this.__filter__(row_comb, pick_self);
+    var possible_rows = this.__filter__(row_comb, counts);
 
     // pick the first undefined field
     if (possible_rows.length > 0) {
@@ -113,13 +121,72 @@ ComputerPlayer.prototype.__pick_combination__ = function(board, pick_self){
     };
 }
 
+ComputerPlayer.prototype.__get_fork__ = function(board, counts){
+    var row_comb = this.__get_all_row_combinations__(board);
+    var rows = this.__filter__(row_comb, counts);
+
+    // count open fields - to find out if there are two intersecting lines
+    // which could for a fork
+    var fields = {};
+    for (var i = 0; i < rows.length; i++) {
+        for (var j = 0; j < rows[i].length; j++) {
+            var field = rows[i][j];
+            var key = ''+field.x+field.y;
+            if (typeof field.value === 'undefined'){
+                if (typeof fields[key] === 'undefined'){
+                    fields[key] = {
+                        count : 1,
+                        field : field,
+                    };
+                } else {
+                    fields[key].count += 1;
+                }
+            }
+        }
+    }
+
+    for (var property in fields) {
+        if (fields.hasOwnProperty(property)) {
+            if (fields[property].count > 1){
+                // found a fork
+                return fields[property].field;
+            }
+        }
+    }
+}
 
 ComputerPlayer.prototype.__pick_win__ = function(board){
-    return this.__pick_combination__(board, true);
+    return this.__pick_combination__(board, {
+        undef_count : 1,
+        self_count  : 2,
+        other_count : 0 
+    });
 }
 
 ComputerPlayer.prototype.__block__ = function(board){
-    return this.__pick_combination__(board, false);
+    return this.__pick_combination__(board, {
+        undef_count : 1,
+        self_count  : 0,
+        other_count : 2 
+    });
+}
+
+ComputerPlayer.prototype.__fork__ = function(board){
+    // block a forking attempt by the other player
+    return this.__get_fork__(board, {
+        undef_count : 2,
+        self_count  : 1,
+        other_count : 0,
+    });
+}
+
+ComputerPlayer.prototype.__block_fork__ = function(board){
+    // block a forking attempt by the other player
+    return this.__get_fork__(board, {
+        undef_count : 2,
+        self_count  : 0,
+        other_count : 1,
+    });
 }
 
 ComputerPlayer.prototype.__pick_center__ = function(board){
