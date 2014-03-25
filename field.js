@@ -5,8 +5,12 @@ function Field (board, value, x, y) {
     this.y = y;
 }
 
-Field.prototype.has_right_heighbor = function(){
+Field.prototype.has_right_neighbor = function(){
     return this.board.fields[this.y].length - 1 > this.x;
+}
+
+Field.prototype.has_left_neighbor = function(){
+    return this.x > 0;
 }
 
 Field.prototype.has_lower_neighbor = function(){
@@ -18,8 +22,14 @@ Field.prototype.has_upper_neighbor = function(){
 }
 
 Field.prototype.get_right_neighbor = function(){
-    if (this.has_right_heighbor()) {
+    if (this.has_right_neighbor()) {
         return this.board.fields[this.y][this.x + 1];
+    }
+}
+
+Field.prototype.get_left_neighbor = function(){
+    if (this.has_left_neighbor()) {
+        return this.board.fields[this.y][this.x - 1];
     }
 }
 

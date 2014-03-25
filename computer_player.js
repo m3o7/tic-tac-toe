@@ -11,8 +11,17 @@ ComputerPlayer.prototype = new Player();
 ComputerPlayer.prototype.constructor = ComputerPlayer;
 
 ComputerPlayer.prototype.make_move = function(game, board){
-    // pick a random field
+    // pick a field
     var field = this.__pick_field__(board);
+
+    // sanity check - verify pick - DEBUG ONLY
+    // debug - random field
+    if (typeof field === 'undefined' || typeof field.value !== 'undefined') {
+        // something went wrong - pick a random empty field
+        field = this.__get_random_field__(board);
+    }
+
+    // commit the pick
     board.set_field_value(this, field.y, field.x);
 
     // notify the game-controller about the move
@@ -21,8 +30,9 @@ ComputerPlayer.prototype.make_move = function(game, board){
 
 ComputerPlayer.prototype.__pick_field__ = function(board){
     // http://en.wikipedia.org/wiki/Tic-tac-toe#Strategy
-    var field = (
+    return (
         // 1. Win
+        this.__pick_win__(board) ||
         // 2. Block
         // 3. Fork
         // 4. Block opponents fork
@@ -30,38 +40,87 @@ ComputerPlayer.prototype.__pick_field__ = function(board){
         this.__pick_center__(board) || 
         // 6. Opposite corner
         // 7. Empty corner
-        this.__pick_empty_corner__(board)
+        this.__pick_empty_corner__(board) ||
         // 8. Empty side
+        this.__pick_empty_side__(board)
     );
+}
 
-    // verify pick
-    // debug - random field
-    if (typeof field === 'undefined' || typeof field.value !== 'undefined') {
-        // something went wrong - pick a random empty field
-        field = this.__get_random_field__(board);
+ComputerPlayer.prototype.__get_first_empty_field__ = function(fields){
+    // Return first empty field - meaning: it can still be played
+    return $.grep(fields, function(field){
+        return (typeof field.value === 'undefined')
+    }).pop();
+}
+
+ComputerPlayer.prototype.__get_all_row_combinations__ = function(board){
+    // Return all Rows (horizontal, vertical, diagonal) that could hold
+    // a winning combination
+    var rows = [];
+
+    
+    for (var y = 0; y < board.length; y++) {
+        // add horizontal line
+        rows.push(board[y]);
+
+        // add vertical row
+        var vertical_row = [];
+        for (var x = 0; x < board.length; x++) {
+            vertical_row.push[y][x];
+        };
+        rows.push(vertical_row);
     }
 
-    return field;
+    // diagonal
+    for (var i = 0; i < Things.length; i++) {
+        Things[i]
+    }
+
+    return rows;
+}
+
+ComputerPlayer.prototype.__filter__ = function (rows){
+    return $.grep(rows, function(row){
+
+    });
+}
+
+ComputerPlayer.prototype.__pick_win__ = function(board){
+    // list all possible rows
+    var row_comb = this.__get_all_row_combinations__(board);
+
+    // filter the ones that have two fields of current player and one undefined
+    var possible_rows = this.__filter__(row_comb);
+
+    // pick the first undefined field
 }
 
 ComputerPlayer.prototype.__pick_center__ = function(board){
     // return center-field if still open
     var center_open = (typeof board.get_field_value(1,1) === 'undefined');
-    if (center_open) console.debug('picked center');
     return center_open ? board.get_field(1,1) : undefined;
 }
 
 ComputerPlayer.prototype.__pick_empty_corner__ = function(board){
-    var corners = $.grep([
+    var corners = [
         board.get_field(0, 0),
         board.get_field(0, board.width-1),
         board.get_field(board.height-1, 0),
         board.get_field(board.height-1, board.width-1),
-    ], function(field){
-        return (typeof field.value === 'undefined')
-    });
+    ];
 
-    return corners.pop();
+    return this.__get_first_empty_field__(corners);
+}
+
+ComputerPlayer.prototype.__pick_empty_side__ = function(board){
+    var sides = [
+        board.get_field(0, 1),
+        board.get_field(1, 0),
+        board.get_field(2, 1),
+        board.get_field(1, 2),
+    ];
+
+    return this.__get_first_empty_field__(sides);
 }
 
 ComputerPlayer.prototype.__get_random_field__ = function(board){
@@ -71,6 +130,6 @@ ComputerPlayer.prototype.__get_random_field__ = function(board){
     var empty_fields = $.grep(board.get_fields(), function(field){
         return (typeof field.value === 'undefined');
     });
-    console.error('strategy is broken - returned a random field, to continue game');
+    console.error('strategy is broken - returned a random field to continue game');
     return empty_fields[Math.floor(Math.random()*empty_fields.length)];
 }
