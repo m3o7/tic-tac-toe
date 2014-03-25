@@ -102,7 +102,7 @@ ComputerPlayer.prototype.__filter__ = function (rows, counts){
     });
 }
 
-ComputerPlayer.prototype.__pick_combination__ = function(board, counts){
+ComputerPlayer.prototype.__get_combinations__ = function(board, counts){
     // list all possible rows
     var row_comb = this.__get_all_row_combinations__(board);
 
@@ -115,11 +115,18 @@ ComputerPlayer.prototype.__pick_combination__ = function(board, counts){
         return $.grep(possible_rows[0], function(field){
             // filter the empty field out
             return (typeof field.value === 'undefined');
-        })[0];
+        });
     };
 }
 
-ComputerPlayer.prototype.__get_fork__ = function(board, counts){
+ComputerPlayer.prototype.__pick_combination__ = function(board, counts){
+    var combinations = this.__get_combinations__(board, counts);
+    if ((typeof combinations !== 'undefined') && combinations.length > 0) {
+        return combinations[0];
+    }
+}
+
+ComputerPlayer.prototype.__get_forks__ = function(board, counts){
     var row_comb = this.__get_all_row_combinations__(board);
     var rows = this.__filter__(row_comb, counts);
 
@@ -143,14 +150,16 @@ ComputerPlayer.prototype.__get_fork__ = function(board, counts){
         }
     }
 
+    var forks = [];
     for (var property in fields) {
         if (fields.hasOwnProperty(property)) {
             if (fields[property].count > 1){
                 // found a fork
-                return fields[property].field;
+                forks.push( fields[property].field );
             }
         }
     }
+    return forks;
 }
 
 ComputerPlayer.prototype.__get_corners__ = function(board){
@@ -181,20 +190,42 @@ ComputerPlayer.prototype.__block__ = function(board){
 
 ComputerPlayer.prototype.__fork__ = function(board){
     // block a forking attempt by the other player
-    return this.__get_fork__(board, {
+    return this.__get_forks__(board, {
         undef_count : 2,
         self_count  : 1,
         other_count : 0,
-    });
+    })[0];
 }
 
 ComputerPlayer.prototype.__block_fork__ = function(board){
-    // block a forking attempt by the other player
-    return this.__get_fork__(board, {
+    // force opponent into defending and make sure that the opponent does not
+    // create a fork by doing so
+
+    var opp_forks = this.__get_forks__(board, {
         undef_count : 2,
         self_count  : 0,
         other_count : 1,
     });
+
+    if (opp_forks.length > 0) {
+        // there are some forks that we need to block by forcing the other 
+        // player to defend himself
+        var fields = this.__get_combinations__(board, {
+            undef_count : 2,
+            self_count  : 1,
+            other_count : 0,
+        });
+
+        for (var i = 0; i < fields.length; i++) {
+            if (!(fields[i] in opp_forks)){
+                // found leverage
+                return fields[i];
+            }
+        };
+
+        // no defensive move possible - directly blocking the fork
+        return opp_forks[0];
+    };
 }
 
 ComputerPlayer.prototype.__pick_center__ = function(board){
