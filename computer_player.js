@@ -34,6 +34,7 @@ ComputerPlayer.prototype.__pick_field__ = function(board){
         // 1. Win
         this.__pick_win__(board) ||
         // 2. Block
+        this.__block__(board) ||
         // 3. Fork
         // 4. Block opponents fork
         // 5. Center
@@ -75,7 +76,7 @@ ComputerPlayer.prototype.__get_all_row_combinations__ = function(board){
     ];
 }
 
-ComputerPlayer.prototype.__filter__ = function (rows){
+ComputerPlayer.prototype.__filter__ = function (rows, pick_self){
     var cl_this = this;
     return $.grep(rows, function(row){
         // check for an undefined field value
@@ -83,18 +84,24 @@ ComputerPlayer.prototype.__filter__ = function (rows){
         var player_count = 0;
         for (var i = 0; i < row.length; i++) {
             undef_count += (typeof row[i].value === 'undefined');
-            player_count += (row[i].value === cl_this);
+            if (pick_self) {
+                player_count += (row[i].value === cl_this);
+            } else {
+                player_count += (row[i].value !== cl_this && 
+                    (typeof row[i].value !== 'undefined'));
+            }
+            
         };
         return undef_count === 1 && player_count === 2;
     });
 }
 
-ComputerPlayer.prototype.__pick_win__ = function(board){
+ComputerPlayer.prototype.__pick_combination__ = function(board, pick_self){
     // list all possible rows
     var row_comb = this.__get_all_row_combinations__(board);
 
-    // filter the ones that have two fields of current player and one undefined
-    var possible_rows = this.__filter__(row_comb);
+    // filter the ones that have two fields of the player and one undefined
+    var possible_rows = this.__filter__(row_comb, pick_self);
 
     // pick the first undefined field
     if (possible_rows.length > 0) {
@@ -104,6 +111,15 @@ ComputerPlayer.prototype.__pick_win__ = function(board){
             return (typeof field.value === 'undefined');
         })[0];
     };
+}
+
+
+ComputerPlayer.prototype.__pick_win__ = function(board){
+    return this.__pick_combination__(board, true);
+}
+
+ComputerPlayer.prototype.__block__ = function(board){
+    return this.__pick_combination__(board, false);
 }
 
 ComputerPlayer.prototype.__pick_center__ = function(board){
