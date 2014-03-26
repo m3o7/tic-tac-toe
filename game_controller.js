@@ -21,7 +21,6 @@ function GameController(players, board, rules, tag){
             window.removeEventListener('board-ready', start_game, false);
         });
     });
-    console.debug('GameController initialized');
 }
 
 GameController.prototype.__next_player__ = function(){
@@ -45,8 +44,21 @@ GameController.prototype.player_moved = function(){
 
     // check if the game has ended
     if (this.rules.is_game_finished(this.board)) {
-        console.log('game over');
-        this.view.show_winner(this.rules.get_winner());
+        var winner = this.rules.get_winner();
+        this.view.show_winner(winner);
+        // TODO: clean up DEBUG ONLY
+        if (typeof winner !== 'undefined') {
+            console.debug('game over: ' + winner.name);
+            if (winner.name === 'david'){
+                console.error('computer has won');
+                for (var i = 0; i < move_history.length; i++) {
+                    console.error(move_history[i]);
+                };
+            }
+        } else {
+            console.debug('game over: tie');
+        }
+        move_history = [];
     } else {
         // if not, continue
         var cl_this = this;
@@ -89,17 +101,17 @@ GameView.prototype.show_winner = function(winner){
         cl_this.base.append(content);
 
         var c2_this = cl_this;
-        $(window).click(function game_ended(){
-            // player acknoledged outcome
+        // $(window).click(function game_ended(){
+        //     // player acknoledged outcome
 
-            // clean up
-            $(window).unbind();
+        //     // clean up
+        //     $(window).unbind();
 
             c2_this.base.remove();
 
             // notify game.js to start a new game
             window.dispatchEvent(new Event('game-ended'));
-        });
+        // });
     });
 
 

@@ -1,5 +1,7 @@
 // CONTROLLER ==================================================================
 // represents the game board - usually a 3x3 board
+var move_history = [];
+
 function BoardController(width, height){
     this.width = width;
     this.height = height;
@@ -28,6 +30,9 @@ BoardController.prototype.get_field_value = function(y, x){
 }
 
 BoardController.prototype.set_field_value = function(new_value, y, x){
+    // TODO: remove - DEBUG ONLY
+    move_history.push(''+x+','+y+','+new_value.symbol);
+
     this.fields[y][x].value = new_value;
 }
 
