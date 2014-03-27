@@ -112,10 +112,15 @@ ComputerPlayer.prototype.__get_combinations__ = function(board, counts){
     // pick the first undefined field
     if (possible_rows.length > 0) {
         // return the first best field to win with
-        return $.grep(possible_rows[0], function(field){
-            // filter the empty field out
-            return (typeof field.value === 'undefined');
+        var possible_fields = [];
+        possible_rows.forEach(function(rows){
+            rows.map(function(field){
+                if (typeof field.value === 'undefined'){
+                    possible_fields.push(field);
+                }
+            });
         });
+        return possible_fields;
     };
 }
 
@@ -207,6 +212,12 @@ ComputerPlayer.prototype.__block_fork__ = function(board){
         other_count : 1,
     });
 
+    var forks = {};
+    opp_forks.forEach(function(fork){
+        var fork_id = '' + fork.x + fork.y;
+        forks[fork_id] = fork;
+    });
+
     if (opp_forks.length > 0) {
         // there are some forks that we need to block by forcing the other 
         // player to defend himself
@@ -215,9 +226,10 @@ ComputerPlayer.prototype.__block_fork__ = function(board){
             self_count  : 1,
             other_count : 0,
         });
-
+        
         for (var i = 0; i < fields.length; i++) {
-            if (!(fields[i] in opp_forks)){
+            var field_id = '' + fields[i].x + fields[i].y;
+            if (field_id in forks){
                 // found leverage
                 return fields[i];
             }

@@ -11,9 +11,9 @@ $(document).ready(function(){
 function start_new_game(){
     // setup
     var players = [
-        // new HumanPlayer('david', 'X'),
+        new HumanPlayer('david', 'X'),
         // new ComputerPlayer('david', 'X'),
-        new RandomComputerPlayer('david', 'X'),
+        // new RandomComputerPlayer('david', 'X'),
         new ComputerPlayer('joshua', 'O')
     ];
 
