@@ -15,7 +15,7 @@ var GameController = function(players, board, rules, tag){
 
         me.view.isReady(function(){
             // adding the board
-            me.board.view.add_to(me.view);
+            me.board.getView().add_to(me.view);
 
             // starting the game
             window.addEventListener('board-ready', function start_game(){
@@ -38,7 +38,7 @@ var GameController = function(players, board, rules, tag){
     var startNewTurn = function(){
         // play another turn
         var player = nextPlayer();
-        player.make_move(me_pointer, me.board);
+        player.make_move(mePointer, me.board);
     };
 
     // +PUBLIC
@@ -46,7 +46,7 @@ var GameController = function(players, board, rules, tag){
         // called by the player
 
         // re-render the board
-        me.board.view.update();
+        me.board.getView().update();
 
         // check if the game has ended
         if (me.rules.is_game_finished(me.board)) {
@@ -57,14 +57,14 @@ var GameController = function(players, board, rules, tag){
                 console.debug('game over: ' + winner.name);
                 if (winner.name === 'david'){
                     console.error('computer has won');
-                    move_history.forEach(function(move){
+                    moveHistory.forEach(function(move){
                         console.error(move);
                     });
                 }
             } else {
                 console.debug('game over: tie');
             }
-            move_history = [];
+            moveHistory = [];
         } else {
             // if not, continue
             window.addEventListener('board-ready', function start_game(){
@@ -76,14 +76,14 @@ var GameController = function(players, board, rules, tag){
     };
 
     // specify public interface
-    var me_pointer = {
+    var mePointer = {
         startNewTurn    : startNewTurn,
         playerMoved     : playerMoved,
     };
 
     init(players, board, rules, tag);
 
-    return me_pointer;
+    return mePointer;
 };
 
 

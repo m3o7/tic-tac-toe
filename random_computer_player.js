@@ -18,7 +18,7 @@ RandomComputerPlayer.prototype.make_move = function(game, board){
     }
 
     // commit the pick
-    board.set_field_value(this, field.y, field.x);
+    board.setFieldValue(this, field.y, field.x);
 
     // notify the game-controller about the move
     // GameController.playerMoved.apply(game);
@@ -29,7 +29,7 @@ RandomComputerPlayer.prototype.__get_random_field__ = function(board){
     // Return a random field - DEBUG ONLY
 
     // find empty fields - implicitly there is always one empty field
-    var empty_fields = $.grep(board.get_fields(), function(field){
+    var empty_fields = $.grep(board.getFields(), function(field){
         return (typeof field.value === 'undefined');
     });
     return empty_fields[Math.floor(Math.random()*empty_fields.length)];

@@ -22,7 +22,7 @@ ComputerPlayer.prototype.make_move = function(game, board){
     }
 
     // commit the pick
-    board.set_field_value(this, field.y, field.x);
+    board.setFieldValue(this, field.y, field.x);
 
     // notify the game-controller about the move
     game.playerMoved();
@@ -64,18 +64,18 @@ ComputerPlayer.prototype.__get_all_row_combinations__ = function(board){
     // TODO: remove hard-coding to 3x3 field - make it generic
     return [
         // horizontal
-        [ board.fields[0][0], board.fields[0][1], board.fields[0][2]],
-        [ board.fields[1][0], board.fields[1][1], board.fields[1][2]],
-        [ board.fields[2][0], board.fields[2][1], board.fields[2][2]],
+        [ board.getFieldArray()[0][0], board.getFieldArray()[0][1], board.getFieldArray()[0][2]],
+        [ board.getFieldArray()[1][0], board.getFieldArray()[1][1], board.getFieldArray()[1][2]],
+        [ board.getFieldArray()[2][0], board.getFieldArray()[2][1], board.getFieldArray()[2][2]],
 
         // vertical
-        [ board.fields[0][0], board.fields[1][0], board.fields[2][0]],
-        [ board.fields[0][1], board.fields[1][1], board.fields[2][1]],
-        [ board.fields[0][2], board.fields[1][2], board.fields[2][2]],
+        [ board.getFieldArray()[0][0], board.getFieldArray()[1][0], board.getFieldArray()[2][0]],
+        [ board.getFieldArray()[0][1], board.getFieldArray()[1][1], board.getFieldArray()[2][1]],
+        [ board.getFieldArray()[0][2], board.getFieldArray()[1][2], board.getFieldArray()[2][2]],
 
         // diagonals
-        [ board.fields[0][0], board.fields[1][1], board.fields[2][2]],
-        [ board.fields[0][2], board.fields[1][1], board.fields[2][0]],
+        [ board.getFieldArray()[0][0], board.getFieldArray()[1][1], board.getFieldArray()[2][2]],
+        [ board.getFieldArray()[0][2], board.getFieldArray()[1][1], board.getFieldArray()[2][0]],
     ];
 }
 
@@ -171,10 +171,10 @@ ComputerPlayer.prototype.__get_forks__ = function(board, counts){
 
 ComputerPlayer.prototype.__get_corners__ = function(board){
     var corners = [
-        board.get_field(0, 0),
-        board.get_field(0, board.width-1),
-        board.get_field(board.height-1, 0),
-        board.get_field(board.height-1, board.width-1),
+        board.getField(0, 0),
+        board.getField(0, board.getWidth()-1),
+        board.getField(board.getHeight()-1, 0),
+        board.getField(board.getHeight()-1, board.getWidth()-1),
     ];
     return corners;
 }
@@ -234,7 +234,7 @@ ComputerPlayer.prototype.__block_fork__ = function(board){
         for (var i = 0; i < fields.length; i++) {
             // get open field, which the other player would be forced to take
             var field = fields[i];
-            board.set_temp_field_value(this, field.y, field.x);
+            board.setTempFieldValue(this, field.y, field.x);
             var open_field = this.__pick_win__(board);
             
             // check if it creates a fork
@@ -247,7 +247,7 @@ ComputerPlayer.prototype.__block_fork__ = function(board){
             var bad_move = future_opp_forks.filter(function(fork){
                 return (fork === open_field);    
             }).length > 0;
-            board.reset_temp_fields();
+            board.resetTempFields();
 
             if (!bad_move) {
                 return field;
@@ -261,8 +261,8 @@ ComputerPlayer.prototype.__block_fork__ = function(board){
 
 ComputerPlayer.prototype.__pick_center__ = function(board){
     // return center-field if still open
-    var center_open = (typeof board.get_field_value(1,1) === 'undefined');
-    return center_open ? board.get_field(1,1) : undefined;
+    var center_open = (typeof board.getFieldValue(1,1) === 'undefined');
+    return center_open ? board.getField(1,1) : undefined;
 }
 
 ComputerPlayer.prototype.__pick_opposite_corner__ = function(board){
@@ -286,10 +286,10 @@ ComputerPlayer.prototype.__pick_empty_corner__ = function(board){
 
 ComputerPlayer.prototype.__pick_empty_side__ = function(board){
     var sides = [
-        board.get_field(0, 1),
-        board.get_field(1, 0),
-        board.get_field(2, 1),
-        board.get_field(1, 2),
+        board.getField(0, 1),
+        board.getField(1, 0),
+        board.getField(2, 1),
+        board.getField(1, 2),
     ];
 
     return this.__get_first_empty_field__(sides);
@@ -299,7 +299,7 @@ ComputerPlayer.prototype.__get_random_field__ = function(board){
     // Return a random field - DEBUG ONLY
 
     // find empty fields - implicitly there is always one empty field
-    var empty_fields = $.grep(board.get_fields(), function(field){
+    var empty_fields = $.grep(board.getFields(), function(field){
         return (typeof field.value === 'undefined');
     });
     console.error('strategy is broken - returned a random field to continue game');

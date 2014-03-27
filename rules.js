@@ -12,7 +12,7 @@ Rules.prototype.is_game_finished = function(board){
     // 1. check if all fields are filled (game ends, no matter what)
     // 2. check if there are three items in a row (horizontal, vertical)
     // 3. check for diagonals
-    var fields = board.get_fields();
+    var fields = board.getFields();
     var any_field_empty = false;
     for (var i = 0; i < fields.length; i++) {
         if (this.__check_horizontal_line__(fields[i]) || 

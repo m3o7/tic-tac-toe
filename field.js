@@ -6,7 +6,7 @@ function Field (board, value, x, y) {
 }
 
 Field.prototype.has_right_neighbor = function(){
-    return this.board.fields[this.y].length - 1 > this.x;
+    return this.board.getFieldArray()[this.y].length - 1 > this.x;
 }
 
 Field.prototype.has_left_neighbor = function(){
@@ -14,7 +14,7 @@ Field.prototype.has_left_neighbor = function(){
 }
 
 Field.prototype.has_lower_neighbor = function(){
-    return this.board.fields.length - 1 > this.y;
+    return this.board.getFieldArray().length - 1 > this.y;
 }
 
 Field.prototype.has_upper_neighbor = function(){
@@ -23,25 +23,25 @@ Field.prototype.has_upper_neighbor = function(){
 
 Field.prototype.get_right_neighbor = function(){
     if (this.has_right_neighbor()) {
-        return this.board.fields[this.y][this.x + 1];
+        return this.board.getFieldArray()[this.y][this.x + 1];
     }
 }
 
 Field.prototype.get_left_neighbor = function(){
     if (this.has_left_neighbor()) {
-        return this.board.fields[this.y][this.x - 1];
+        return this.board.getFieldArray()[this.y][this.x - 1];
     }
 }
 
 Field.prototype.get_lower_neighbor = function(){
     if (this.has_lower_neighbor()) {
-        return this.board.fields[this.y + 1][this.x];
+        return this.board.getFieldArray()[this.y + 1][this.x];
     }
 }
 
 Field.prototype.get_upper_neighbor = function(){
     if (this.has_upper_neighbor()){
-        return this.board.fields[this.y -1][this.x];
+        return this.board.getFieldArray()[this.y -1][this.x];
     }
 }
 
@@ -63,5 +63,5 @@ Field.prototype.get_oppisite_field = function(){
     // calculate the opposite
     var y = 1 + (1 - this.y);
     var x = 1 + (1 - this.x);
-    return this.board.get_field(y, x);
+    return this.board.getField(y, x);
 }
