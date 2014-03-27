@@ -15,7 +15,7 @@ var GameController = function(players, board, rules, tag){
 
         me.view.isReady(function(){
             // adding the board
-            me.board.getView().add_to(me.view);
+            me.board.getView().addTo(me.view);
 
             // starting the game
             window.addEventListener('board-ready', function start_game(){

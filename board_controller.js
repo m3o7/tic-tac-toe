@@ -13,7 +13,7 @@ var BoardController = function(width, height){
         me.fields = initFields(me.width, me.height);
 
         me.view = new BoardView(mePointer);
-        me.temp_fields = []; // used to keep track of simulated moves
+        me.tempFields = []; // used to keep track of simulated moves
     };
 
     // -PRIVATE
@@ -54,39 +54,39 @@ var BoardController = function(width, height){
     };
 
     // +PUBLIC
-    var setFieldValue = function(new_value, y, x){
-        me.fields[y][x].value = new_value;
+    var setFieldValue = function(newValue, y, x){
+        me.fields[y][x].value = newValue;
 
         // DEBUG ONLY - to keep the move history
-        moveHistory.push(''+x+','+y+','+new_value.symbol);
+        moveHistory.push(''+x+','+y+','+newValue.symbol);
     };
 
     // +PUBLIC
-    var setTempFieldValue = function(new_value, y, x){
+    var setTempFieldValue = function(newValue, y, x){
         // for simulation purposes - simulate future move(s)
-        me.temp_fields.push(me.fields[y][x]);
-        me.fields[y][x].value = new_value;
+        me.tempFields.push(me.fields[y][x]);
+        me.fields[y][x].value = newValue;
     };
 
     // +PUBLIC
     var resetTempFields = function(){
         // for simulation purposes - reset the future fields
-        me.temp_fields.forEach(function(field){
+        me.tempFields.forEach(function(field){
             field.value = undefined;
         });
-        me.temp_fields = [];
+        me.tempFields = [];
     };
 
     // +PUBLIC
     var getFields = function(){
         // Return list of all fields, (for convinient iteration)
-        var field_iter = [];
+        var fieldIter = [];
         me.fields.forEach(function(row){
             row.forEach(function(field){
-                field_iter.push(field);
+                fieldIter.push(field);
             });
         });
-        return field_iter;
+        return fieldIter;
     };
 
     // +PUBLIC
@@ -139,7 +139,7 @@ var BoardView = function(controller){
     }
 
     // +PUBLIC
-    var add_to = function(view){
+    var addTo = function(view){
         me.tag = view.getBase();
         render();
     }
@@ -155,7 +155,7 @@ var BoardView = function(controller){
     init(controller);
     // specify public interface
     return {
-        add_to  : add_to,
+        addTo  : addTo,
         update  : update,
     }
 }
