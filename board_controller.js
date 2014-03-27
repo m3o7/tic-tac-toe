@@ -8,6 +8,8 @@ function BoardController(width, height){
     this.fields = this.__init_field__(this.width, this.height);
 
     this.view = new BoardView(this);
+
+    this.temp_fields = [];
 }
 
 BoardController.prototype.__init_field__ = function(width, height){
@@ -34,6 +36,20 @@ BoardController.prototype.set_field_value = function(new_value, y, x){
     move_history.push(''+x+','+y+','+new_value.symbol);
 
     this.fields[y][x].value = new_value;
+}
+
+BoardController.prototype.set_temp_field_value = function(new_value, y, x){
+    // for simulation purposes - simulate future move(s)
+    this.temp_fields.push(this.fields[y][x]);
+    this.fields[y][x].value = new_value;
+}
+
+BoardController.prototype.reset_temp_fields = function(){
+    // for simulation purposes - reset the future fields
+    this.temp_fields.forEach(function(field){
+        field.value = undefined;
+    });
+    this.temp_fields = [];
 }
 
 BoardController.prototype.get_fields = function(){

@@ -102,7 +102,9 @@ ComputerPlayer.prototype.__filter__ = function (rows, counts){
     });
 }
 
-ComputerPlayer.prototype.__get_combinations__ = function(board, counts){
+ComputerPlayer.prototype.__get_winning_fields__ = function(board, counts){
+    // Return all fields that can still be part of a winning strategy
+
     // list all possible rows
     var row_comb = this.__get_all_row_combinations__(board);
 
@@ -125,7 +127,7 @@ ComputerPlayer.prototype.__get_combinations__ = function(board, counts){
 }
 
 ComputerPlayer.prototype.__pick_combination__ = function(board, counts){
-    var combinations = this.__get_combinations__(board, counts);
+    var combinations = this.__get_winning_fields__(board, counts);
     if ((typeof combinations !== 'undefined') && combinations.length > 0) {
         return combinations[0];
     }
@@ -220,19 +222,36 @@ ComputerPlayer.prototype.__block_fork__ = function(board){
 
     if (opp_forks.length > 0) {
         // there are some forks that we need to block by forcing the other 
-        // player to defend himself
-        var fields = this.__get_combinations__(board, {
+        // player to defend himself, but it should not force the other player
+        // into creating a fork
+        var fields = this.__get_winning_fields__(board, {
             undef_count : 2,
             self_count  : 1,
             other_count : 0,
         });
-        
+
+        // find a field that is not creating a fork for the enemy
         for (var i = 0; i < fields.length; i++) {
-            var field_id = '' + fields[i].x + fields[i].y;
-            if (field_id in forks){
-                // found leverage
-                return fields[i];
-            }
+            // get open field, which the other player would be forced to take
+            var field = fields[i];
+            board.set_temp_field_value(this, field.y, field.x);
+            var open_field = this.__pick_win__(board);
+            
+            // check if it creates a fork
+            var future_opp_forks = this.__get_forks__(board, {
+                undef_count : 2,
+                self_count  : 0,
+                other_count : 1,
+            });
+
+            var bad_move = future_opp_forks.filter(function(fork){
+                return (fork === open_field);    
+            }).length > 0;
+            board.reset_temp_fields();
+
+            if (!bad_move) {
+                return field;
+            };
         };
 
         // no defensive move possible - directly blocking the fork
