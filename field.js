@@ -1,67 +1,113 @@
-function Field (board, value, x, y) {
-    this.board = board;
-    this.value = value;
-    this.x = x;
-    this.y = y;
-}
+var Field = function(board, value, x, y) {
 
-Field.prototype.has_right_neighbor = function(){
-    return this.board.getFieldArray()[this.y].length - 1 > this.x;
-}
+    var me = this;
 
-Field.prototype.has_left_neighbor = function(){
-    return this.x > 0;
-}
-
-Field.prototype.has_lower_neighbor = function(){
-    return this.board.getFieldArray().length - 1 > this.y;
-}
-
-Field.prototype.has_upper_neighbor = function(){
-    return this.y > 0;
-}
-
-Field.prototype.get_right_neighbor = function(){
-    if (this.has_right_neighbor()) {
-        return this.board.getFieldArray()[this.y][this.x + 1];
-    }
-}
-
-Field.prototype.get_left_neighbor = function(){
-    if (this.has_left_neighbor()) {
-        return this.board.getFieldArray()[this.y][this.x - 1];
-    }
-}
-
-Field.prototype.get_lower_neighbor = function(){
-    if (this.has_lower_neighbor()) {
-        return this.board.getFieldArray()[this.y + 1][this.x];
-    }
-}
-
-Field.prototype.get_upper_neighbor = function(){
-    if (this.has_upper_neighbor()){
-        return this.board.getFieldArray()[this.y -1][this.x];
-    }
-}
-
-Field.prototype.get_right_upper_neighbor = function(){
-    var right = this.get_right_neighbor();
-    if (typeof right !== 'undefined') {
-        return right.get_upper_neighbor();
-    }
-}
-
-Field.prototype.get_right_lower_neighbor = function(){
-    var lower = this.get_lower_neighbor();
-    if (typeof lower !== 'undefined') {
-        return lower.get_right_neighbor();
+    // -PRIVATE
+    var init = function(board, value, x, y){
+        me.board = board;
+        me.value = value;
+        me.x = x;
+        me.y = y;
     };
-}
 
-Field.prototype.get_oppisite_field = function(){
-    // calculate the opposite
-    var y = 1 + (1 - this.y);
-    var x = 1 + (1 - this.x);
-    return this.board.getField(y, x);
+    // +PUBLIC
+    var getInstVar = function(name){
+        // return value of instance variable
+        return me[name];
+    };
+
+    // PUBLIC
+    var setInstVar = function(name, newValue){
+        me[name] = newValue;
+    };
+
+    // +PUBLIC
+    var has_right_neighbor = function(){
+        return me.board.getFieldArray()[me.y].length - 1 > me.x;
+    };
+
+    // +PUBLIC
+    var has_left_neighbor = function(){
+        return me.x > 0;
+    };
+
+    // +PUBLIC
+    var has_lower_neighbor = function(){
+        return me.board.getFieldArray().length - 1 > me.y;
+    };
+
+    // +PUBLIC
+    var has_upper_neighbor = function(){
+        return me.y > 0;
+    };
+
+    // +PUBLIC
+    var get_right_neighbor = function(){
+        if (has_right_neighbor()) {
+            return me.board.getFieldArray()[me.y][me.x + 1];
+        }
+    };
+
+    // +PUBLIC
+    var get_left_neighbor = function(){
+        if (has_left_neighbor()) {
+            return me.board.getFieldArray()[me.y][me.x - 1];
+        }
+    };
+
+    // +PUBLIC
+    var get_lower_neighbor = function(){
+        if (has_lower_neighbor()) {
+            return me.board.getFieldArray()[me.y + 1][me.x];
+        }
+    };
+
+    // +PUBLIC
+    var get_upper_neighbor = function(){
+        if (has_upper_neighbor()){
+            return me.board.getFieldArray()[me.y -1][me.x];
+        }
+    };
+
+    // +PUBLIC
+    var get_right_upper_neighbor = function(){
+        var right = get_right_neighbor();
+        if (typeof right !== 'undefined') {
+            return right.get_upper_neighbor();
+        }
+    };
+
+    // +PUBLIC
+    var get_right_lower_neighbor = function(){
+        var lower = get_lower_neighbor();
+        if (typeof lower !== 'undefined') {
+            return lower.get_right_neighbor();
+        };
+    };
+
+    // +PUBLIC
+    var get_oppisite_field = function(){
+        // calculate the opposite
+        var y = 1 + (1 - me.y);
+        var x = 1 + (1 - me.x);
+        return me.board.getField(y, x);
+    };
+
+    init(board, value, x, y);
+    // specify public interface
+    return {
+        getInstVar                  : getInstVar,
+        setInstVar                  : setInstVar,
+        has_right_neighbor          : has_right_neighbor,
+        has_left_neighbor           : has_left_neighbor,
+        has_lower_neighbor          : has_lower_neighbor,
+        has_upper_neighbor          : has_upper_neighbor,
+        get_right_neighbor          : get_right_neighbor,
+        get_left_neighbor           : get_left_neighbor,
+        get_lower_neighbor          : get_lower_neighbor,
+        get_upper_neighbor          : get_upper_neighbor,
+        get_right_upper_neighbor    : get_right_upper_neighbor,
+        get_right_lower_neighbor    : get_right_lower_neighbor,
+        get_oppisite_field          : get_oppisite_field,
+    };
 }

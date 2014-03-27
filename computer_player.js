@@ -16,13 +16,13 @@ ComputerPlayer.prototype.make_move = function(game, board){
 
     // sanity check - verify pick - DEBUG ONLY
     // debug - random field
-    if (typeof field === 'undefined' || typeof field.value !== 'undefined') {
+    if (typeof field === 'undefined' || typeof field.getInstVar('value') !== 'undefined') {
         // something went wrong - pick a random empty field
         field = this.__get_random_field__(board);
     }
 
     // commit the pick
-    board.setFieldValue(this, field.y, field.x);
+    board.setFieldValue(this, field.getInstVar('y'), field.getInstVar('x'));
 
     // notify the game-controller about the move
     game.playerMoved();
@@ -53,7 +53,7 @@ ComputerPlayer.prototype.__pick_field__ = function(board){
 ComputerPlayer.prototype.__get_first_empty_field__ = function(fields){
     // Return first empty field - meaning: it can still be played
     return $.grep(fields, function(field){
-        return (typeof field.value === 'undefined')
+        return (typeof field.getInstVar('value') === 'undefined')
     }).pop();
 }
 
@@ -87,9 +87,9 @@ ComputerPlayer.prototype.__filter__ = function (rows, counts){
         var self_count = 0;
         var other_count = 0;
         for (var i = 0; i < row.length; i++) {
-            if (row[i].value === cl_this) {
+            if (row[i].getInstVar('value') === cl_this) {
                 self_count += 1;
-            } else if (typeof row[i].value === 'undefined'){
+            } else if (typeof row[i].getInstVar('value') === 'undefined'){
                 undef_count += 1;
             } else {
                 other_count += 1;
@@ -117,7 +117,7 @@ ComputerPlayer.prototype.__get_winning_fields__ = function(board, counts){
         var possible_fields = [];
         possible_rows.forEach(function(rows){
             rows.map(function(field){
-                if (typeof field.value === 'undefined'){
+                if (typeof field.getInstVar('value') === 'undefined'){
                     possible_fields.push(field);
                 }
             });
@@ -137,14 +137,14 @@ ComputerPlayer.prototype.__get_forks__ = function(board, counts){
     var row_comb = this.__get_all_row_combinations__(board);
     var rows = this.__filter__(row_comb, counts);
 
-    // count open fields - to find out if there are two intersecting lines
-    // which could for a fork
+    // find out if there are two intersecting lines, by counting
+    // field occurences
     var fields = {};
     for (var i = 0; i < rows.length; i++) {
         for (var j = 0; j < rows[i].length; j++) {
             var field = rows[i][j];
-            var key = ''+field.x+field.y;
-            if (typeof field.value === 'undefined'){
+            var key = ''+field.getInstVar('x')+field.getInstVar('y');
+            if (typeof field.getInstVar('value') === 'undefined'){
                 if (typeof fields[key] === 'undefined'){
                     fields[key] = {
                         count : 1,
@@ -216,7 +216,7 @@ ComputerPlayer.prototype.__block_fork__ = function(board){
 
     var forks = {};
     opp_forks.forEach(function(fork){
-        var fork_id = '' + fork.x + fork.y;
+        var fork_id = '' + fork.getInstVar('x') + fork.getInstVar('y');
         forks[fork_id] = fork;
     });
 
@@ -234,7 +234,7 @@ ComputerPlayer.prototype.__block_fork__ = function(board){
         for (var i = 0; i < fields.length; i++) {
             // get open field, which the other player would be forced to take
             var field = fields[i];
-            board.setTempFieldValue(this, field.y, field.x);
+            board.setTempFieldValue(this, field.getInstVar('y'), field.getInstVar('x'));
             var open_field = this.__pick_win__(board);
             
             // check if it creates a fork
@@ -270,11 +270,11 @@ ComputerPlayer.prototype.__pick_opposite_corner__ = function(board){
     var corners = this.__get_corners__(board);
     var opponent_fields = $.grep(corners, function(field){
         // return any field that is an opponents field
-        return (typeof field.value !== 'undefined' && field.value !== cl_this);
+        return (typeof field.getInstVar('value') !== 'undefined' && field.getInstVar('value') !== cl_this);
     });
     var valid_opp_fields = $.grep(opponent_fields, function(field){
         // return any field that has an empty opposite field
-        return (typeof field.get_oppisite_field().value === 'undefined');
+        return (typeof field.get_oppisite_field().getInstVar('value') === 'undefined');
     });
     return (valid_opp_fields.length > 0) ? valid_opp_fields[0].get_oppisite_field() : undefined;
 }
@@ -300,7 +300,7 @@ ComputerPlayer.prototype.__get_random_field__ = function(board){
 
     // find empty fields - implicitly there is always one empty field
     var empty_fields = $.grep(board.getFields(), function(field){
-        return (typeof field.value === 'undefined');
+        return (typeof field.getInstVar('value') === 'undefined');
     });
     console.error('strategy is broken - returned a random field to continue game');
     return empty_fields[Math.floor(Math.random()*empty_fields.length)];

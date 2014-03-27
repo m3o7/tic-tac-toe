@@ -50,12 +50,12 @@ var BoardController = function(width, height){
 
     // +PUBLIC
     var getFieldValue = function(y, x){
-        return getField(y, x).value;
+        return getField(y, x).getInstVar('value');
     };
 
     // +PUBLIC
     var setFieldValue = function(newValue, y, x){
-        me.fields[y][x].value = newValue;
+        me.fields[y][x].setInstVar('value', newValue);
 
         // DEBUG ONLY - to keep the move history
         moveHistory.push(''+x+','+y+','+newValue.symbol);
@@ -65,14 +65,14 @@ var BoardController = function(width, height){
     var setTempFieldValue = function(newValue, y, x){
         // for simulation purposes - simulate future move(s)
         me.tempFields.push(me.fields[y][x]);
-        me.fields[y][x].value = newValue;
+        me.fields[y][x].setInstVar('value', newValue);
     };
 
     // +PUBLIC
     var resetTempFields = function(){
         // for simulation purposes - reset the future fields
         me.tempFields.forEach(function(field){
-            field.value = undefined;
+            field.setInstVar('value', undefined);
         });
         me.tempFields = [];
     };

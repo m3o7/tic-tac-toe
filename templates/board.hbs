@@ -2,14 +2,14 @@
     {{#each board}}
         <div id="ttt-row-{{@index}}">
         {{#each this}}
-            {{#if this}}
+            {{#hasSymbol this}}
                 <div id="ttt-field-{{@index}}" class="ttt-field">
-                    {{this.value.symbol}}
+                    {{{symbol this}}}
                 </div>
             {{else}}
                 <div id="ttt-field-{{@index}}" class="ttt-active ttt-field">
                 </div>
-            {{/if}}
+            {{/hasSymbol}}
         {{/each}}
         </div>
     {{/each}}

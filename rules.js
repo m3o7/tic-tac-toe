@@ -22,7 +22,7 @@ Rules.prototype.is_game_finished = function(board){
             return true;
         }
         // check if any field is empty, to indicate a tie
-        any_field_empty = any_field_empty || (typeof fields[i].value === 'undefined');
+        any_field_empty = any_field_empty || (typeof fields[i].getInstVar('value') === 'undefined');
     }
     if (!any_field_empty) {
         // a tie has been reached
@@ -35,7 +35,7 @@ Rules.prototype.is_game_finished = function(board){
 
 Rules.prototype.__check_line__ = function(field, next_function){
     // Return true if there are '3' items in a row of the same kind
-    if (typeof field.value === 'undefined') {
+    if (typeof field.getInstVar('value') === 'undefined') {
         // skip empty fields
         return false;
     }
@@ -45,11 +45,11 @@ Rules.prototype.__check_line__ = function(field, next_function){
     while(counter--){
         var next_field = current_field[next_function]();
         if(typeof next_field === 'undefined' ||
-            next_field.value !== current_field.value) return false;
+            next_field.getInstVar('value') !== current_field.getInstVar('value')) return false;
         current_field = next_field;
     }
     // remember the winner
-    this.winner = current_field.value;
+    this.winner = current_field.getInstVar('value');
     return true;
 }
 
