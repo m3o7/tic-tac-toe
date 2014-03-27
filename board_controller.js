@@ -114,33 +114,48 @@ var BoardController = function(width, height){
 }
 
 // VIEW ========================================================================
-function BoardView(controller){
-    this.controller = controller;
-}
+var BoardView = function(controller){
 
-BoardView.prototype.__render__ = function(){
-    // render initially
-    var cl_this = this; // closure
-    getTemplate('board', {
-        board: this.controller.getFieldArray()
-            }).then(function(base){
-        // render the game
-        cl_this.base = $(base);
-        cl_this.tag.append(cl_this.base);
+    var me = this;
 
-        // send out that the board is ready
-        window.dispatchEvent(new Event('board-ready'));
-    });
-}
+    // -PRIVATE
+    var init = function(controller){
+        me.controller = controller;
+    }
 
-BoardView.prototype.add_to = function(view){
-    this.tag = view.getBase();
-    this.__render__();
-}
+    // -PRIVATE
+    var render = function(){
+        // render initially
+        getTemplate('board', {
+                    board: me.controller.getFieldArray()
+                }).then(function(base){
+            // render the game
+            me.base = $(base);
+            me.tag.append(me.base);
 
-BoardView.prototype.update = function(){
-    // remove old field
-    this.base.remove();
-    // render new state
-    this.__render__();
+            // send out that the board is ready
+            window.dispatchEvent(new Event('board-ready'));
+        });
+    }
+
+    // +PUBLIC
+    var add_to = function(view){
+        me.tag = view.getBase();
+        render();
+    }
+
+    // +PUBLIC
+    var update = function(){
+        // remove old field
+        me.base.remove();
+        // render new state
+        render();
+    }
+
+    init(controller);
+    // specify public interface
+    return {
+        add_to  : add_to,
+        update  : update,
+    }
 }
