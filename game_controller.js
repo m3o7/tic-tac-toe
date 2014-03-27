@@ -57,9 +57,9 @@ var GameController = function(players, board, rules, tag){
                 console.debug('game over: ' + winner.name);
                 if (winner.name === 'david'){
                     console.error('computer has won');
-                    for (var i = 0; i < move_history.length; i++) {
-                        console.error(move_history[i]);
-                    };
+                    move_history.forEach(function(move){
+                        console.error(move);
+                    });
                 }
             } else {
                 console.debug('game over: tie');
@@ -84,7 +84,7 @@ var GameController = function(players, board, rules, tag){
     init(players, board, rules, tag);
 
     return me_pointer;
-}
+};
 
 
 // VIEW ========================================================================
@@ -96,7 +96,7 @@ var GameView = function(tag){
     // -PRIVATE
     var init = function(tag){
         me.tag = $(tag);
-        me.__ready_callbacks__ = [];
+        me.readyCallbacks = [];
 
         getTemplate('game').then(function(base){
             // render the game
@@ -108,20 +108,22 @@ var GameView = function(tag){
 
     // +PUBLIC
     var getBase = function(){
+        // Return the base HTML-tag (usually 'body') under which this
+        // view resides
         return me.base;
-    }
+    };
 
     // +PUBLIC
     var isReady = function(callback){
-        me.__ready_callbacks__.push(callback);
-    }
+        me.readyCallbacks.push(callback);
+    };
 
     // -PRIVATE
     var callReadyCallbacks = function(){
-        for (var i = 0; i < me.__ready_callbacks__.length; i++) {
-            me.__ready_callbacks__[i]();
-        };
-    }
+        me.readyCallbacks.forEach(function(callback){
+            callback();
+        });
+    };
 
     // +PUBLIC
     var showWinner = function(winner){
@@ -139,7 +141,7 @@ var GameView = function(tag){
                 window.dispatchEvent(new Event('game-ended'));
             });
         });
-    }
+    };
 
     init(tag);
 
@@ -148,5 +150,5 @@ var GameView = function(tag){
         getBase     : getBase,
         isReady     : isReady,
         showWinner  : showWinner,
-    }
-}
+    };
+};
