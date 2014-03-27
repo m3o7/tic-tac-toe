@@ -38,7 +38,7 @@ var GameController = function(players, board, rules, tag){
     var startNewTurn = function(){
         // play another turn
         var player = nextPlayer();
-        player.make_move(mePointer, me.board);
+        player.makeMove(mePointer, me.board);
     };
 
     // +PUBLIC
@@ -50,7 +50,8 @@ var GameController = function(players, board, rules, tag){
 
         // check if the game has ended
         if (me.rules.isGameFinished(me.board)) {
-            var winner = me.rules.get_winner();
+            var winner = me.rules.getWinner();
+            var name = (typeof winner !== 'undefined') ? winner.getName() : 'tie';
             me.view.showWinner(winner);
             // TODO: clean up DEBUG ONLY
             if (typeof winner !== 'undefined') {

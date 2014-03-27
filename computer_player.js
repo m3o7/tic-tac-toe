@@ -10,7 +10,7 @@ ComputerPlayer.prototype = new Player();
 // correct the constructor pointer because it points to Player
 ComputerPlayer.prototype.constructor = ComputerPlayer;
 
-ComputerPlayer.prototype.make_move = function(game, board){
+ComputerPlayer.prototype.makeMove = function(game, board){
     // pick a field
     var field = this.__pick_field__(board);
 

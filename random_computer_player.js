@@ -10,7 +10,7 @@ RandomComputerPlayer.prototype = new Player();
 // correct the constructor pointer because it points to Player
 RandomComputerPlayer.prototype.constructor = RandomComputerPlayer;
 
-RandomComputerPlayer.prototype.make_move = function(game, board){
+RandomComputerPlayer.prototype.makeMove = function(game, board){
     // select a random field
     if (typeof field === 'undefined' || typeof field.getInstVar('value') !== 'undefined') {
         // something went wrong - pick a random empty field

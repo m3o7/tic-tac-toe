@@ -6,7 +6,7 @@ function getTemplate(name, data) {
 
 Handlebars.registerHelper('symbol', function(field) {
     return new Handlebars.SafeString(
-        field.getInstVar('value').symbol
+        field.getInstVar('value').getSymbol()
     );
 });
 

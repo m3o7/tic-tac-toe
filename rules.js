@@ -1,14 +1,14 @@
 // implements the game rules, in anticipation of potentially 
 // changing/new game rules
-var Rules = function(win_count){
+var Rules = function(winCount){
     // player who succeeds in placing three respective marks in a horizontal, 
     // vertical, or diagonal row wins the game
 
     var me = this;
 
-    var init = function(win_count){
+    var init = function(winCount){
         // number of items (in a row) needed to win 
-        me.win_count = (typeof win_count === 'undefined') ? 3 : win_count;
+        me.winCount = (typeof winCount === 'undefined') ? 3 : winCount;
     };
 
     // +PUBLIC
@@ -45,7 +45,7 @@ var Rules = function(win_count){
             return false;
         }
 
-        var counter = me.win_count-1;
+        var counter = me.winCount-1;
         var current_field = field;
         while(counter--){
             var next_field = current_field[next_function]();
@@ -79,16 +79,16 @@ var Rules = function(win_count){
     };
 
     // +PUBLIC
-    var get_winner = function(){
+    var getWinner = function(){
         // Return the winner of the game. If there is a tie return null
         return me.winner;
     };
 
-    init(win_count);
+    init(winCount);
 
     // specify public interface
     return {
         isGameFinished  : isGameFinished,
-        get_winner      : get_winner,
+        getWinner      : getWinner,
     };
 }
