@@ -33,7 +33,7 @@ HumanPlayer.prototype.made_move = function(ui_field, board, game){
         $('.ttt-field').unbind();
 
         // notify the game-controller about the move
-        game.player_moved();
+        game.playerMoved();
     } else {
         // try again
         console.debug('invalid move');

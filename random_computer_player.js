@@ -21,7 +21,8 @@ RandomComputerPlayer.prototype.make_move = function(game, board){
     board.set_field_value(this, field.y, field.x);
 
     // notify the game-controller about the move
-    game.player_moved();
+    // GameController.playerMoved.apply(game);
+    game.playerMoved();
 }
 
 RandomComputerPlayer.prototype.__get_random_field__ = function(board){

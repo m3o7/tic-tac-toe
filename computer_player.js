@@ -25,7 +25,7 @@ ComputerPlayer.prototype.make_move = function(game, board){
     board.set_field_value(this, field.y, field.x);
 
     // notify the game-controller about the move
-    game.player_moved();
+    game.playerMoved();
 }
 
 ComputerPlayer.prototype.__pick_field__ = function(board){
