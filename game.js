@@ -13,8 +13,8 @@ function start_new_game(){
     var players = [
         new HumanPlayer('david', 'X'),
         // new ComputerPlayer('david', 'X'),
+        new ComputerPlayer('joshua', 'O'),
         // new RandomComputerPlayer('david', 'X'),
-        new ComputerPlayer('joshua', 'O')
     ];
 
     var board = new BoardController(3, 3);
