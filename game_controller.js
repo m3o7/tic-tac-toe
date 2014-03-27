@@ -13,7 +13,7 @@ var GameController = function(players, board, rules, tag){
 
         me.view = new GameView(tag);
 
-        me.view.is_ready(function(){
+        me.view.isReady(function(){
             // adding the board
             me.board.view.add_to(me.view);
 
@@ -51,7 +51,7 @@ var GameController = function(players, board, rules, tag){
         // check if the game has ended
         if (me.rules.is_game_finished(me.board)) {
             var winner = me.rules.get_winner();
-            me.view.show_winner(winner);
+            me.view.showWinner(winner);
             // TODO: clean up DEBUG ONLY
             if (typeof winner !== 'undefined') {
                 console.debug('game over: ' + winner.name);
@@ -89,45 +89,64 @@ var GameController = function(players, board, rules, tag){
 
 // VIEW ========================================================================
 // responsible to render the game
-function GameView(tag){
-    this.tag = $(tag);
-    this.__ready_callbacks__ = [];
+var GameView = function(tag){
 
-    var cl_this = this; // closure
-    getTemplate('game').then(function(base){
-        // render the game
-        cl_this.base = $(base);
-        cl_this.tag.append(cl_this.base);
-        cl_this.call_ready_callbacks();
-    });
-}
+    var me = this;
 
-GameView.prototype.is_ready = function(callback){
-    this.__ready_callbacks__.push(callback);
-}
+    // -PRIVATE
+    var init = function(tag){
+        me.tag = $(tag);
+        me.__ready_callbacks__ = [];
 
-GameView.prototype.call_ready_callbacks = function(){
-    for (var i = 0; i < this.__ready_callbacks__.length; i++) {
-        this.__ready_callbacks__[i]();
-    };
-}
-
-GameView.prototype.show_winner = function(winner){
-    var cl_this = this; //closure
-    getTemplate('winner', winner).then(function(content){
-        cl_this.base.append(content);
-
-        var c2_this = cl_this;
-        $(window).click(function game_ended(){
-            // player acknoledged outcome
-
-            // clean up
-            $(window).unbind();
-
-            c2_this.base.remove();
-
-            // notify game.js to start a new game
-            window.dispatchEvent(new Event('game-ended'));
+        getTemplate('game').then(function(base){
+            // render the game
+            me.base = $(base);
+            me.tag.append(me.base);
+            callReadyCallbacks();
         });
-    });
+    };
+
+    // +PUBLIC
+    var getBase = function(){
+        return me.base;
+    }
+
+    // +PUBLIC
+    var isReady = function(callback){
+        me.__ready_callbacks__.push(callback);
+    }
+
+    // -PRIVATE
+    var callReadyCallbacks = function(){
+        for (var i = 0; i < me.__ready_callbacks__.length; i++) {
+            me.__ready_callbacks__[i]();
+        };
+    }
+
+    // +PUBLIC
+    var showWinner = function(winner){
+        getTemplate('winner', winner).then(function(content){
+            me.base.append(content);
+
+            $(window).click(function game_ended(){
+                // player acknoledged outcome
+
+                // clean up
+                $(window).unbind();
+                me.base.remove();
+
+                // notify game.js to start a new game
+                window.dispatchEvent(new Event('game-ended'));
+            });
+        });
+    }
+
+    init(tag);
+
+    // specify public interface
+    return {
+        getBase     : getBase,
+        isReady     : isReady,
+        showWinner  : showWinner,
+    }
 }

@@ -81,7 +81,7 @@ BoardView.prototype.__render__ = function(){
 }
 
 BoardView.prototype.add_to = function(view){
-    this.tag = view.base;
+    this.tag = view.getBase();
     this.__render__();
 }
 
