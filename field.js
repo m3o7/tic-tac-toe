@@ -22,71 +22,71 @@ var Field = function(board, value, x, y) {
     };
 
     // +PUBLIC
-    var has_right_neighbor = function(){
+    var hasRightNeighbor = function(){
         return me.board.getFieldArray()[me.y].length - 1 > me.x;
     };
 
     // +PUBLIC
-    var has_left_neighbor = function(){
+    var hasLeftNeighbor = function(){
         return me.x > 0;
     };
 
     // +PUBLIC
-    var has_lower_neighbor = function(){
+    var hasLowerNeighbor = function(){
         return me.board.getFieldArray().length - 1 > me.y;
     };
 
     // +PUBLIC
-    var has_upper_neighbor = function(){
+    var hasUpperNeighbor = function(){
         return me.y > 0;
     };
 
     // +PUBLIC
-    var get_right_neighbor = function(){
-        if (has_right_neighbor()) {
+    var getRightNeighbor = function(){
+        if (hasRightNeighbor()) {
             return me.board.getFieldArray()[me.y][me.x + 1];
         }
     };
 
     // +PUBLIC
-    var get_left_neighbor = function(){
-        if (has_left_neighbor()) {
+    var getLeftNeighbor = function(){
+        if (hasLeftNeighbor()) {
             return me.board.getFieldArray()[me.y][me.x - 1];
         }
     };
 
     // +PUBLIC
-    var get_lower_neighbor = function(){
-        if (has_lower_neighbor()) {
+    var getLowerNeighbor = function(){
+        if (hasLowerNeighbor()) {
             return me.board.getFieldArray()[me.y + 1][me.x];
         }
     };
 
     // +PUBLIC
-    var get_upper_neighbor = function(){
-        if (has_upper_neighbor()){
+    var getUpperNeighbor = function(){
+        if (hasUpperNeighbor()){
             return me.board.getFieldArray()[me.y -1][me.x];
         }
     };
 
     // +PUBLIC
-    var get_right_upper_neighbor = function(){
-        var right = get_right_neighbor();
+    var getRightUpperNeighbor = function(){
+        var right = getRightNeighbor();
         if (typeof right !== 'undefined') {
-            return right.get_upper_neighbor();
+            return right.getUpperNeighbor();
         }
     };
 
     // +PUBLIC
-    var get_right_lower_neighbor = function(){
-        var lower = get_lower_neighbor();
+    var getRightLowerNeighbor = function(){
+        var lower = getLowerNeighbor();
         if (typeof lower !== 'undefined') {
-            return lower.get_right_neighbor();
+            return lower.getRightNeighbor();
         };
     };
 
     // +PUBLIC
-    var get_oppisite_field = function(){
+    var getOppisiteField = function(){
         // calculate the opposite
         var y = 1 + (1 - me.y);
         var x = 1 + (1 - me.x);
@@ -96,18 +96,18 @@ var Field = function(board, value, x, y) {
     init(board, value, x, y);
     // specify public interface
     return {
-        getInstVar                  : getInstVar,
-        setInstVar                  : setInstVar,
-        has_right_neighbor          : has_right_neighbor,
-        has_left_neighbor           : has_left_neighbor,
-        has_lower_neighbor          : has_lower_neighbor,
-        has_upper_neighbor          : has_upper_neighbor,
-        get_right_neighbor          : get_right_neighbor,
-        get_left_neighbor           : get_left_neighbor,
-        get_lower_neighbor          : get_lower_neighbor,
-        get_upper_neighbor          : get_upper_neighbor,
-        get_right_upper_neighbor    : get_right_upper_neighbor,
-        get_right_lower_neighbor    : get_right_lower_neighbor,
-        get_oppisite_field          : get_oppisite_field,
+        getInstVar              : getInstVar,
+        setInstVar              : setInstVar,
+        hasRightNeighbor        : hasRightNeighbor,
+        hasLeftNeighbor         : hasLeftNeighbor,
+        hasLowerNeighbor        : hasLowerNeighbor,
+        hasUpperNeighbor        : hasUpperNeighbor,
+        getRightNeighbor        : getRightNeighbor,
+        getLeftNeighbor         : getLeftNeighbor,
+        getLowerNeighbor        : getLowerNeighbor,
+        getUpperNeighbor        : getUpperNeighbor,
+        getRightUpperNeighbor   : getRightUpperNeighbor,
+        getRightLowerNeighbor   : getRightLowerNeighbor,
+        getOppisiteField        : getOppisiteField,
     };
 }

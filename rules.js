@@ -54,19 +54,19 @@ Rules.prototype.__check_line__ = function(field, next_function){
 }
 
 Rules.prototype.__check_horizontal_line__ = function(field){
-    return this.__check_line__(field, 'get_right_neighbor');
+    return this.__check_line__(field, 'getRightNeighbor');
 }
 
 Rules.prototype.__check_vertical_line__ = function(field){
-    return this.__check_line__(field, 'get_lower_neighbor');
+    return this.__check_line__(field, 'getLowerNeighbor');
 }
 
 Rules.prototype.__check_diagonale_down_line__ = function(field){
-    return this.__check_line__(field, 'get_right_lower_neighbor');
+    return this.__check_line__(field, 'getRightLowerNeighbor');
 }
 
 Rules.prototype.__check_diagonale_up_line__ = function(field){
-    return this.__check_line__(field, 'get_right_upper_neighbor');
+    return this.__check_line__(field, 'getRightUpperNeighbor');
 }
 
 Rules.prototype.get_winner = function(){

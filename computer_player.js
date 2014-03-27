@@ -274,9 +274,9 @@ ComputerPlayer.prototype.__pick_opposite_corner__ = function(board){
     });
     var valid_opp_fields = $.grep(opponent_fields, function(field){
         // return any field that has an empty opposite field
-        return (typeof field.get_oppisite_field().getInstVar('value') === 'undefined');
+        return (typeof field.getOppisiteField().getInstVar('value') === 'undefined');
     });
-    return (valid_opp_fields.length > 0) ? valid_opp_fields[0].get_oppisite_field() : undefined;
+    return (valid_opp_fields.length > 0) ? valid_opp_fields[0].getOppisiteField() : undefined;
 }
 
 ComputerPlayer.prototype.__pick_empty_corner__ = function(board){
