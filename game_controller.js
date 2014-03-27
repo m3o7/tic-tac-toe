@@ -49,7 +49,7 @@ var GameController = function(players, board, rules, tag){
         me.board.getView().update();
 
         // check if the game has ended
-        if (me.rules.is_game_finished(me.board)) {
+        if (me.rules.isGameFinished(me.board)) {
             var winner = me.rules.get_winner();
             me.view.showWinner(winner);
             // TODO: clean up DEBUG ONLY

@@ -27,7 +27,7 @@ class BoardController
 class Rules
     // implements the game rules, in anticipation 
     // of potentially changing/new game rules
-    is_game_finished(board)
+    isGameFinished(board)
     get_winner(board)
 
 class Player
