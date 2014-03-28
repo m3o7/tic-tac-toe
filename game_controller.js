@@ -73,6 +73,11 @@ var GameController = Class.extend({
         this.board.clear();
         this.rules.clear();
         this.startNewTurn();
+
+        // vertically re-allign the board all the time
+        $(window).resize(function(){
+            alignVertically();
+        });
     },
 });
 
