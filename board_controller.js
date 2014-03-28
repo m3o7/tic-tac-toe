@@ -2,137 +2,115 @@
 // represents the game board - usually a 3x3 board
 var moveHistory = [];
 
-var BoardController = function(width, height){
-
-    var me = this;
+var BoardController = Class.extend({
 
     // -PRIVATE
-    function init(width, height){
-        me.width = width;
-        me.height = height;
-        me.fields = initFields(me.width, me.height);
+    init: function(width, height){
+        this.width = width;
+        this.height = height;
+        this.fields = this.initFields(this.width, this.height);
 
-        me.view = new BoardView(mePointer);
-        me.tempFields = []; // used to keep track of simulated moves
-    };
+        this.view = new BoardView(this);
+        this.tempFields = []; // used to keep track of simulated moves
+    },
 
     // -PRIVATE
-    function initFields(width, height){
+    initFields: function(width, height){
         var fields = new Array(width);
         for (var y = 0; y < width; y++) {
             fields[y] = new Array(height);  
             for (var x = 0; x < fields[y].length; x++) {
-                fields[y][x] = new Field(mePointer, undefined, x, y);
+                fields[y][x] = new Field(this, undefined, x, y);
             };
         }
         return fields;
-    };
+    },
 
-    function clear(){
+    clear: function(){
         // reset every field on the board
-        getFields().forEach(function(field){
+        this.getFields().forEach(function(field){
             field.setInstVar('value', undefined);
         });
-    };
+    },
 
     // +PUBLIC
-    function getWidth(){
-        return me.width;
-    };
+    getWidth: function(){
+        return this.width;
+    },
 
     // +PUBLIC
-    function getHeight(){
-        return me.height;
-    };
+    getHeight: function(){
+        return this.height;
+    },
 
     // +PUBLIC
-    function getView(){
-        return me.view;
-    };
+    getView: function(){
+        return this.view;
+    },
 
     // +PUBLIC
-    function getField(y, x){
-        return me.fields[y][x];
-    };
+    getField: function(y, x){
+        return this.fields[y][x];
+    },
 
     // +PUBLIC
-    function getFieldValue(y, x){
-        return getField(y, x).getInstVar('value');
-    };
+    getFieldValue: function(y, x){
+        return this.getField(y, x).getInstVar('value');
+    },
 
     // +PUBLIC
-    function setFieldValue(newValue, y, x){
-        me.fields[y][x].setInstVar('value', newValue);
+    setFieldValue: function(newValue, y, x){
+        this.fields[y][x].setInstVar('value', newValue);
 
         // DEBUG ONLY - to keep the move history
         moveHistory.push(''+x+','+y+','+newValue.symbol);
-    };
+    },
 
     // +PUBLIC
-    function setTempFieldValue(newValue, y, x){
+    setTempFieldValue: function(newValue, y, x){
         // for simulation purposes - simulate future move(s)
-        me.tempFields.push(me.fields[y][x]);
-        me.fields[y][x].setInstVar('value', newValue);
-    };
+        this.tempFields.push(this.fields[y][x]);
+        this.fields[y][x].setInstVar('value', newValue);
+    },
 
     // +PUBLIC
-    function resetTempFields(){
+    resetTempFields: function(){
         // for simulation purposes - reset the future fields
-        me.tempFields.forEach(function(field){
+        this.tempFields.forEach(function(field){
             field.setInstVar('value', undefined);
         });
-        me.tempFields = [];
-    };
+        this.tempFields = [];
+    },
 
     // +PUBLIC
-    function getFields(){
+    getFields: function(){
         // Return list of all fields, (for convinient iteration)
         var fieldIter = [];
-        me.fields.forEach(function(row){
+        this.fields.forEach(function(row){
             row.forEach(function(field){
                 fieldIter.push(field);
             });
         });
         return fieldIter;
-    };
+    },
 
     // +PUBLIC
-    function getFieldArray(){
-        return me.fields;
-    };
-
-    // specify the public interface
-    var mePointer = {
-        clear               : clear,
-        getWidth            : getWidth,
-        getHeight           : getHeight,
-        getView             : getView,
-        getField            : getField,
-        getFieldValue       : getFieldValue,
-        setFieldValue       : setFieldValue,
-        setTempFieldValue   : setTempFieldValue,
-        resetTempFields     : resetTempFields,
-        getFields           : getFields,
-        getFieldArray       : getFieldArray,
-    };
-
-    init(width, height);
-
-    return mePointer;
-}
+    getFieldArray: function(){
+        return this.fields;
+    },
+});
 
 // VIEW ========================================================================
-var BoardView = function(controller){
-
-    var me = this;
+var BoardView = Class.extend({
 
     // -PRIVATE
-    function init(controller){
-        me.controller = controller;
-    }
+    init: function(controller){
+        this.controller = controller;
+    },
 
     // -PRIVATE
-    function render(){
+    render: function(){
+        var me = this;
         // render initially
         getTemplate('board', {
                     board: me.controller.getFieldArray()
@@ -155,17 +133,11 @@ var BoardView = function(controller){
                 alignVertically();
             });
         });
-    }
+    },
 
     // +PUBLIC
-    function addTo(view){
-        me.tag = view.getBase();
-        render();
-    }
-
-    init(controller);
-    // specify public interface
-    return {
-        addTo  : addTo,
-    }
-}
+    addTo: function(view){
+        this.tag = view.getBase();
+        this.render();
+    },
+});
