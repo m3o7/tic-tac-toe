@@ -18,3 +18,11 @@ Handlebars.registerHelper('hasSymbol', function(field, block) {
         return block.inverse(field);
     }
 });
+
+Handlebars.registerHelper('hasWinner', function(player, block) {
+    if(typeof player !== 'undefined') {
+        return block.fn(player.getName());
+    } else {
+        return block.inverse();
+    }
+});
