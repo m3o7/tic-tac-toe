@@ -1,121 +1,101 @@
-var Field = function(board, value, x, y) {
-
-    var me = this;
+var Field = Class.extend({
 
     // -PRIVATE
-    function init(board, value, x, y){
-        me.board = board;
-        me.value = value;
-        me.x = x;
-        me.y = y;
-    };
+    init: function(board, value, x, y){
+        this.board = board;
+        this.value = value;
+        this.x = x;
+        this.y = y;
+    },
 
     // +PUBLIC
-    function getInstVar(name){
+    getInstVar: function(name){
         // return value of instance variable
-        return me[name];
-    };
+        return this[name];
+    },
 
     // PUBLIC
-    function setInstVar(name, newValue){
-        me[name] = newValue;
-        update();
-    };
+    setInstVar: function(name, newValue){
+        this[name] = newValue;
+        this.update();
+    },
 
     // +PUBLIC
-    function hasRightNeighbor(){
-        return me.board.getFieldArray()[me.y].length - 1 > me.x;
-    };
+    hasRightNeighbor: function(){
+        return this.board.getFieldArray()[this.y].length - 1 > this.x;
+    },
 
     // +PUBLIC
-    function hasLeftNeighbor(){
-        return me.x > 0;
-    };
+    hasLeftNeighbor: function(){
+        return this.x > 0;
+    },
 
     // +PUBLIC
-    function hasLowerNeighbor(){
-        return me.board.getFieldArray().length - 1 > me.y;
-    };
+    hasLowerNeighbor: function(){
+        return this.board.getFieldArray().length - 1 > this.y;
+    },
 
     // +PUBLIC
-    function hasUpperNeighbor(){
-        return me.y > 0;
-    };
+    hasUpperNeighbor: function(){
+        return this.y > 0;
+    },
 
     // +PUBLIC
-    function getRightNeighbor(){
-        if (hasRightNeighbor()) {
-            return me.board.getField(me.y, me.x + 1);
+    getRightNeighbor: function(){
+        if (this.hasRightNeighbor()) {
+            return this.board.getField(this.y, this.x + 1);
         }
-    };
+    },
 
     // +PUBLIC
-    function getLeftNeighbor(){
-        if (hasLeftNeighbor()) {
-            return me.board.getField(me.y, me.x - 1);
+    getLeftNeighbor: function(){
+        if (this.hasLeftNeighbor()) {
+            return this.board.getField(this.y, this.x - 1);
         }
-    };
+    },
 
     // +PUBLIC
-    function getLowerNeighbor(){
-        if (hasLowerNeighbor()) {
-            return me.board.getField(me.y + 1, me.x);
+    getLowerNeighbor: function(){
+        if (this.hasLowerNeighbor()) {
+            return this.board.getField(this.y + 1, this.x);
         }
-    };
+    },
 
     // +PUBLIC
-    function getUpperNeighbor(){
-        if (hasUpperNeighbor()){
-            return me.board.getField(me.y -1, me.x);
+    getUpperNeighbor: function(){
+        if (this.hasUpperNeighbor()){
+            return this.board.getField(this.y -1, this.x);
         }
-    };
+    },
 
     // +PUBLIC
-    function getRightUpperNeighbor(){
-        var right = getRightNeighbor();
+    getRightUpperNeighbor: function(){
+        var right = this.getRightNeighbor();
         if (typeof right !== 'undefined') {
             return right.getUpperNeighbor();
         }
-    };
+    },
 
     // +PUBLIC
-    function getRightLowerNeighbor(){
-        var lower = getLowerNeighbor();
+    getRightLowerNeighbor: function(){
+        var lower = this.getLowerNeighbor();
         if (typeof lower !== 'undefined') {
             return lower.getRightNeighbor();
         };
-    };
+    },
 
     // +PUBLIC
-    function getOppisiteField(){
+    getOppisiteField: function(){
         // calculate the opposite
-        var y = 1 + (1 - me.y);
-        var x = 1 + (1 - me.x);
-        return me.board.getField(y, x);
-    };
+        var y = 1 + (1 - this.y);
+        var x = 1 + (1 - this.x);
+        return this.board.getField(y, x);
+    },
 
     // -PRIVATE
-    function update(){
+    update: function(){
         // update the HTML of this element
-        var newHTML = (typeof me.value === 'undefined') ? '' : me.value.getSymbol();
-        $('#ttt-row-' + me.y + ' #ttt-field-' + me.x).html(newHTML);
-    }
-
-    init(board, value, x, y);
-    // specify public interface
-    return {
-        getInstVar              : getInstVar,
-        setInstVar              : setInstVar,
-        hasRightNeighbor        : hasRightNeighbor,
-        hasLeftNeighbor         : hasLeftNeighbor,
-        hasLowerNeighbor        : hasLowerNeighbor,
-        hasUpperNeighbor        : hasUpperNeighbor,
-        getRightNeighbor        : getRightNeighbor,
-        getLeftNeighbor         : getLeftNeighbor,
-        getLowerNeighbor        : getLowerNeighbor,
-        getUpperNeighbor        : getUpperNeighbor,
-        getRightUpperNeighbor   : getRightUpperNeighbor,
-        getRightLowerNeighbor   : getRightLowerNeighbor,
-        getOppisiteField        : getOppisiteField,
-    };
-}
+        var newHTML = (typeof this.value === 'undefined') ? '' : this.value.getSymbol();
+        $('#ttt-row-' + this.y + ' #ttt-field-' + this.x).html(newHTML);
+    },
+});
