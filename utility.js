@@ -22,7 +22,7 @@ function shuffle(oldArray) {
 };
 
 function getTemplate(name, data) {
-    return $.get('/templates/'+name+'.hbs').then(function(src) {
+    return $.get('/tmpl/'+name+'.tmp').then(function(src) {
        return Handlebars.compile(src)(data);
     });
 };
