@@ -143,6 +143,17 @@ var BoardView = function(controller){
 
             // send out that the board is ready
             window.dispatchEvent(new Event('board-ready'));
+
+            // vertically center board
+            function alignVertically(){
+                var height = $('.ttt-game').height();
+                $('.ttt-game').offset({top: (($(window).height() - height)/2)});
+            }
+            
+            alignVertically();
+            $(window).resize(function(){
+                alignVertically();
+            });
         });
     }
 
