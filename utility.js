@@ -1,3 +1,16 @@
+function shuffle(oldArray) {
+    var newArray = oldArray.slice();
+    var len = newArray.length;
+    var i = len;
+    while (i--) {
+        var p = parseInt(Math.random()*len);
+        var t = newArray[i];
+        newArray[i] = newArray[p];
+        newArray[p] = t;
+    }
+    return newArray; 
+};
+
 function getTemplate(name, data) {
     return $.get('/templates/'+name+'.hbs').then(function(src) {
        return Handlebars.compile(src)(data);
