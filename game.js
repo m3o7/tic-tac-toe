@@ -12,9 +12,9 @@ function start_new_game(){
     // setup
     var players = [
         new HumanPlayer('david', 'X'),
-        new HumanPlayer('joshua', 'O'),
+        // new HumanPlayer('joshua', 'O'),
         // new ComputerPlayer('david', 'X'),
-        // new ComputerPlayer('joshua', 'O'),
+        new ComputerPlayer('joshua', 'O'),
         // new RandomComputerPlayer('david', 'X'),
     ];
 
