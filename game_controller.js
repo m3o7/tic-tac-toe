@@ -1,118 +1,154 @@
 // CONTROLLER ==================================================================
 // responsible to keep track of the game state
-function GameController(players, board, rules, tag){
-    this.players = players;
-    this.__game_started__ = false;
-    this.__current_player__ = -1;
-    this.board = board;
-    this.rules = rules;
+var GameController = function(players, board, rules, tag){
 
-    this.view = new GameView(this, tag);
-    var cl_this = this; //closure
-    this.view.is_ready(function(){
-        // adding the board
-        cl_this.board.view.add_to(cl_this.view);
+    var me = this;
 
-        // starting the game
-        var c2_this = cl_this;
-        window.addEventListener('board-ready', function start_game(){
-            c2_this.start_new_turn();
-            // remove this listener, since its only needed for the initial part
-            window.removeEventListener('board-ready', start_game, false);
+    // -PRIVATE
+    var init = function(players, board, rules, tag){
+        me.players = players;    // array of players
+        me.currentPlayerID = -1; // pointer to current player
+        me.board = board;
+        me.rules = rules;
+
+        me.view = new GameView(tag);
+
+        me.view.isReady(function(){
+            // adding the board
+            me.board.getView().addTo(me.view);
+
+            // starting the game
+            window.addEventListener('board-ready', function start_game(){
+                startNewTurn();
+                // remove this listener, since its only needed for the initial part
+                window.removeEventListener('board-ready', start_game, false);
+            });
         });
-    });
-}
+    };
 
-GameController.prototype.__next_player__ = function(){
-    // count up the internal pointer or reset it to zero
-    this.__current_player__ = (this.__current_player__ + 1 == this.players.length) ? 
-        0 : this.__current_player__ + 1;
-    return this.players[this.__current_player__];
-}
+    // -PRIVATE
+    var nextPlayer = function(){
+        // count up the internal pointer or reset it to zero
+        me.currentPlayerID = (me.currentPlayerID + 1 == me.players.length) ? 
+            0 : me.currentPlayerID + 1;
+        return me.players[me.currentPlayerID];
+    };
 
-GameController.prototype.start_new_turn = function(){
-    // play another turn
-    var player = this.__next_player__();
-    player.make_move(this, this.board);
-}
+    // +PUBLIC
+    var startNewTurn = function(){
+        // play another turn
+        var player = nextPlayer();
+        player.makeMove(mePointer, me.board);
+    };
 
-GameController.prototype.player_moved = function(){
-    // called by the player
+    // +PUBLIC
+    var playerMoved = function(){
+        // called by the player
 
-    // re-render the board
-    this.board.view.update();
+        // re-render the board
+        me.board.getView().update();
 
-    // check if the game has ended
-    if (this.rules.is_game_finished(this.board)) {
-        var winner = this.rules.get_winner();
-        this.view.show_winner(winner);
-        // TODO: clean up DEBUG ONLY
-        if (typeof winner !== 'undefined') {
-            console.debug('game over: ' + winner.name);
-            if (winner.name === 'david'){
-                console.error('computer has won');
-                for (var i = 0; i < move_history.length; i++) {
-                    console.error(move_history[i]);
-                };
+        // check if the game has ended
+        if (me.rules.isGameFinished(me.board)) {
+            var winner = me.rules.getWinner();
+            me.view.showWinner(winner);
+            // TODO: clean up DEBUG ONLY
+            if (typeof winner !== 'undefined') {
+                console.debug('game over: ' + winner.name);
+                if (winner.name === 'david'){
+                    console.error('computer has won');
+                    moveHistory.forEach(function(move){
+                        console.error(move);
+                    });
+                }
+            } else {
+                console.debug('game over: tie');
             }
+            moveHistory = [];
         } else {
-            console.debug('game over: tie');
+            // if not, continue
+            window.addEventListener('board-ready', function start_game(){
+                startNewTurn();
+                // remove this listener, one time only event
+                window.removeEventListener('board-ready', start_game, false);
+            });
         }
-        move_history = [];
-    } else {
-        // if not, continue
-        var cl_this = this;
-        window.addEventListener('board-ready', function start_game(){
-            cl_this.start_new_turn();
-            // remove this listener, one time only event
-            window.removeEventListener('board-ready', start_game, false);
-        });
-    }
-}
+    };
+
+    // specify public interface
+    var mePointer = {
+        startNewTurn    : startNewTurn,
+        playerMoved     : playerMoved,
+    };
+
+    init(players, board, rules, tag);
+
+    return mePointer;
+};
+
 
 // VIEW ========================================================================
 // responsible to render the game
-function GameView(controller, tag){
-    this.tag = $(tag);
-    this.__ready_callbacks__ = [];
+var GameView = function(tag){
 
-    var cl_this = this; // closure
-    getTemplate('game').then(function(base){
-        // render the game
-        cl_this.base = $(base);
-        cl_this.tag.append(cl_this.base);
-        cl_this.call_ready_callbacks();
-    });
-}
+    var me = this;
 
-GameView.prototype.is_ready = function(callback){
-    this.__ready_callbacks__.push(callback);
-}
+    // -PRIVATE
+    var init = function(tag){
+        me.tag = $(tag);
+        me.readyCallbacks = [];
 
-GameView.prototype.call_ready_callbacks = function(){
-    for (var i = 0; i < this.__ready_callbacks__.length; i++) {
-        this.__ready_callbacks__[i]();
+        getTemplate('game').then(function(base){
+            // render the game
+            me.base = $(base);
+            me.tag.append(me.base);
+            callReadyCallbacks();
+        });
     };
-}
 
-GameView.prototype.show_winner = function(winner){
-    var cl_this = this; //closure
-    getTemplate('winner', winner).then(function(content){
-        cl_this.base.append(content);
+    // +PUBLIC
+    var getBase = function(){
+        // Return the base HTML-tag (usually 'body') under which this
+        // view resides
+        return me.base;
+    };
 
-        var c2_this = cl_this;
-        // $(window).click(function game_ended(){
-        //     // player acknoledged outcome
+    // +PUBLIC
+    var isReady = function(callback){
+        me.readyCallbacks.push(callback);
+    };
 
-        //     // clean up
-        //     $(window).unbind();
+    // -PRIVATE
+    var callReadyCallbacks = function(){
+        me.readyCallbacks.forEach(function(callback){
+            callback();
+        });
+    };
 
-            c2_this.base.remove();
+    // +PUBLIC
+    var showWinner = function(winner){
+        getTemplate('winner', winner).then(function(content){
+            me.base.append(content);
 
-            // notify game.js to start a new game
-            window.dispatchEvent(new Event('game-ended'));
-        // });
-    });
+            $(window).click(function game_ended(){
+                // player acknoledged outcome
 
+                // clean up
+                $(window).unbind();
+                me.base.remove();
 
-}
+                // notify game.js to start a new game
+                window.dispatchEvent(new Event('game-ended'));
+            });
+        });
+    };
+
+    init(tag);
+
+    // specify public interface
+    return {
+        getBase     : getBase,
+        isReady     : isReady,
+        showWinner  : showWinner,
+    };
+};

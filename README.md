@@ -27,15 +27,15 @@ class BoardController
 class Rules
     // implements the game rules, in anticipation 
     // of potentially changing/new game rules
-    is_game_finished(board)
-    get_winner(board)
+    isGameFinished(board)
+    getWinner(board)
 
 class Player
     // interface, which has to be implemented
     + name
     + symbol
     init(name)
-    make_move(board)
+    makeMove(board)
 
 class Human(Player)
     // implements the Player-interface

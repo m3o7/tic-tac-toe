@@ -12,6 +12,7 @@ function start_new_game(){
     // setup
     var players = [
         new HumanPlayer('david', 'X'),
+        // new HumanPlayer('joshua', 'O'),
         // new ComputerPlayer('david', 'X'),
         new ComputerPlayer('joshua', 'O'),
         // new RandomComputerPlayer('david', 'X'),
@@ -19,5 +20,5 @@ function start_new_game(){
 
     var board = new BoardController(3, 3);
     var rules = new Rules();
-    var game = new GameController(players, board, rules, 'body');
+    var game = new GameController(shuffle(players), board, rules, 'body');
 }
