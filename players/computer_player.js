@@ -1,83 +1,65 @@
 // implements the Player-interface for a computer
 // TODO: currently the computer-player is hard-coded to a 3x3 field
-var ComputerPlayer = function(name, symbol){
-
-    var me = this;
+var ComputerPlayer = BasePlayer.extend({
 
     // -PRIVATE
-    function init(name, symbol){
-        me.name = name;
-        me.symbol = symbol;
-    };
+    init: function(name, symbol){
+        this._super(name, symbol);
+        this.isComputerPlayer = true;
+    },
 
     // +PUBLIC
-    function getSymbol(){
-        return me.symbol;
-    };
-
-    // +PUBLIC
-    function getName(){
-        return me.name;
-    };
-
-    //  +PUBLIC
-    function isComputer(){
-        // HELPER METHOD
-        return true;
-    }
-
-    // +PUBLIC
-    function makeMove(game, board){
+    makeMove: function(game, board){
         // pick a field
-        var field = pickField(board);
+        var field = this.pickField(board);
 
         // sanity check - verify pick - DEBUG ONLY
         // debug - random field
         if (typeof field === 'undefined' || typeof field.getInstVar('value') !== 'undefined') {
             // something went wrong - pick a random empty field
-            field = getRandomField(board);
+            field = this.getRandomField(board);
         }
 
         // commit the pick
-        board.setFieldValue(mePointer, field.getInstVar('y'), field.getInstVar('x'));
+        board.setFieldValue(this, field.getInstVar('y'), field.getInstVar('x'));
 
         // notify the game-controller about the move
         game.playerMoved();
-    }
+    },
 
     // -PRIVATE
-    function pickField(board){
+    pickField: function(board){
         // http://en.wikipedia.org/wiki/Tic-tac-toe#Strategy
         return (
             // 1. Win
-            pickWin(board) ||
+            this.pickWin(board) ||
             // 2. Block
-            block(board) ||
+            this.block(board) ||
             // 3. Fork
-            fork(board) ||
+            this.fork(board) ||
             // 4. Block opponents fork
-            blockFork(board) ||
+            this.blockFork(board) ||
             // 5. Center
-            pickCenter(board) ||
+            this.pickCenter(board) ||
             // 6. Opposite corner
-            pickOppositeCorner(board) ||
+            this.pickOppositeCorner(board) ||
             // 7. Empty corner
-            pickEmptyCorner(board) ||
+            this.pickEmptyCorner(board) ||
             // 8. Empty side
-            pickEmptySide(board)
+            this.pickEmptySide(board)
         );
-    }
+    },
 
     // -PRIVATE
-    function getFirstEmptyField(fields){
+    getFirstEmptyField: function(fields){
         // Return first empty field - meaning: it can still be played
         return fields.filter(function(field){
             return (typeof field.getInstVar('value') === 'undefined')
         }).pop();
-    }
+    },
 
     // -PRIVATE
-    function getAllRowCombinations(board){
+    getAllRowCombinations: function(board){
         // Return all Rows (horizontal, vertical, diagonal) that could hold
         // a winning combination
 
@@ -97,19 +79,20 @@ var ComputerPlayer = function(name, symbol){
             [ board.getField(0,0), board.getField(1,1), board.getField(2,2) ],
             [ board.getField(0,2), board.getField(1,1), board.getField(2,0) ],
         ];
-    }
+    },
 
     // -PRIVATE
-    function filter(rows, counts){
+    filter: function(rows, counts){
         // filter all rows out that have the wanted 'field-placements'
         // e.g.: a row with 2 of my fields and one open field, so I could win
+        var me = this;
         return rows.filter(function(row){
             // check for an undefined field value
             var undefCount = 0;
             var selfCount = 0;
             var otherCount = 0;
             for (var i = 0; i < row.length; i++) {
-                if (row[i].getInstVar('value') === mePointer) {
+                if (row[i].getInstVar('value') === me) {
                     selfCount += 1;
                 } else if (typeof row[i].getInstVar('value') === 'undefined'){
                     undefCount += 1;
@@ -122,17 +105,17 @@ var ComputerPlayer = function(name, symbol){
                     counts.otherCount === otherCount
             );
         });
-    }
+    },
 
     // -PRIVATE
-    function getWinningFields(board, counts){
+    getWinningFields: function(board, counts){
         // Return all fields that can still be part of a winning strategy
 
         // list all possible rows
-        var rowCombinations = getAllRowCombinations(board);
+        var rowCombinations = this.getAllRowCombinations(board);
 
         // filter the ones that have two fields of the player and one undefined
-        var possibleRows = filter(rowCombinations, counts);
+        var possibleRows = this.filter(rowCombinations, counts);
 
         // pick the first undefined field
         if (possibleRows.length > 0) {
@@ -147,20 +130,20 @@ var ComputerPlayer = function(name, symbol){
             });
             return possibleFields;
         };
-    }
+    },
 
     // -PRIVATE
-    function pickCombination(board, counts){
-        var combinations = getWinningFields(board, counts);
+    pickCombination: function(board, counts){
+        var combinations = this.getWinningFields(board, counts);
         if ((typeof combinations !== 'undefined') && combinations.length > 0) {
             return combinations[0];
         }
-    }
+    },
 
     // -PRIVATE
-    function getForks(board, counts){
-        var rowComb = getAllRowCombinations(board);
-        var rows = filter(rowComb, counts);
+    getForks: function(board, counts){
+        var rowComb = this.getAllRowCombinations(board);
+        var rows = this.filter(rowComb, counts);
 
         // find out if there are two intersecting lines, by counting
         // field occurences
@@ -192,10 +175,10 @@ var ComputerPlayer = function(name, symbol){
             }
         }
         return forks;
-    }
+    },
 
     // -PRIVATE
-    function getCorners(board){
+    getCorners: function(board){
         var corners = [
             board.getField(0, 0),
             board.getField(0, board.getWidth()-1),
@@ -203,42 +186,42 @@ var ComputerPlayer = function(name, symbol){
             board.getField(board.getHeight()-1, board.getWidth()-1),
         ];
         return corners;
-    }
+    },
 
     // -PRIVATE
-    function pickWin(board){
-        return pickCombination(board, {
+    pickWin: function(board){
+        return this.pickCombination(board, {
             undefCount : 1,
             selfCount  : 2,
             otherCount : 0 
         });
-    }
+    },
 
     // -PRIVATE
-    function block(board){
-        return pickCombination(board, {
+    block: function(board){
+        return this.pickCombination(board, {
             undefCount : 1,
             selfCount  : 0,
             otherCount : 2 
         });
-    }
+    },
 
     // -PRIVATE
-    function fork(board){
+    fork: function(board){
         // block a forking attempt by the other player
-        return getForks(board, {
+        return this.getForks(board, {
             undefCount : 2,
             selfCount  : 1,
             otherCount : 0,
         })[0];
-    }
+    },
 
     // -PRIVATE
-    function blockFork(board){
+    blockFork: function(board){
         // force opponent into defending and make sure that the opponent does not
         // create a fork by doing so
 
-        var oppForks = getForks(board, {
+        var oppForks = this.getForks(board, {
             undefCount : 2,
             selfCount  : 0,
             otherCount : 1,
@@ -254,7 +237,7 @@ var ComputerPlayer = function(name, symbol){
             // there are some forks that we need to block by forcing the other 
             // player to defend himself, but it should not force the other player
             // into creating a fork
-            var fields = getWinningFields(board, {
+            var fields = this.getWinningFields(board, {
                 undefCount : 2,
                 selfCount  : 1,
                 otherCount : 0,
@@ -264,11 +247,11 @@ var ComputerPlayer = function(name, symbol){
             for (var i = 0; i < fields.length; i++) {
                 // get open field, which the other player would be forced to take
                 var field = fields[i];
-                board.setTempFieldValue(mePointer, field.getInstVar('y'), field.getInstVar('x'));
-                var openField = pickWin(board);
+                board.setTempFieldValue(this, field.getInstVar('y'), field.getInstVar('x'));
+                var openField = this.pickWin(board);
                 
                 // check if it creates a fork
-                var futureOppForks = getForks(board, {
+                var futureOppForks = this.getForks(board, {
                     undefCount : 2,
                     selfCount  : 0,
                     otherCount : 1,
@@ -287,37 +270,38 @@ var ComputerPlayer = function(name, symbol){
             // no defensive move possible - directly blocking the fork
             return oppForks[0];
         };
-    }
+    },
 
     // -PRIVATE
-    function pickCenter(board){
+    pickCenter: function(board){
         // return center-field if still open
         var centerOpen = (typeof board.getFieldValue(1,1) === 'undefined');
         return centerOpen ? board.getField(1,1) : undefined;
-    }
+    },
 
     // -PRIVATE
-    function pickOppositeCorner(board){
-        var corners = getCorners(board);
+    pickOppositeCorner: function(board){
+        var me = this;
+        var corners = this.getCorners(board);
         var opponentFields = corners.filter(function(field){
             // return any field that is an opponents field
-            return (typeof field.getInstVar('value') !== 'undefined' && field.getInstVar('value') !== mePointer);
+            return (typeof field.getInstVar('value') !== 'undefined' && field.getInstVar('value') !== me);
         });
         var validOppFields = opponentFields.filter(function(field){
             // return any field that has an empty opposite field
             return (typeof field.getOppisiteField().getInstVar('value') === 'undefined');
         });
         return (validOppFields.length > 0) ? validOppFields[0].getOppisiteField() : undefined;
-    }
+    },
 
     // -PRIVATE
-    function pickEmptyCorner(board){
-        var corners = getCorners(board);
-        return getFirstEmptyField(corners);
-    }
+    pickEmptyCorner: function(board){
+        var corners = this.getCorners(board);
+        return this.getFirstEmptyField(corners);
+    },
 
     // -PRIVATE
-    function pickEmptySide(board){
+    pickEmptySide: function(board){
         var sides = [
             board.getField(0, 1),
             board.getField(1, 0),
@@ -325,30 +309,6 @@ var ComputerPlayer = function(name, symbol){
             board.getField(1, 2),
         ];
 
-        return getFirstEmptyField(sides);
-    }
-
-    // -PRIVATE
-    function getRandomField(board){
-        // Return a random field - DEBUG ONLY
-
-        // find empty fields - implicitly there is always one empty field
-        var emptyFields = board.getFields().filter(function(field){
-            return (typeof field.getInstVar('value') === 'undefined');
-        });
-        console.error('strategy is broken - returned a random field to continue game');
-        return emptyFields[Math.floor(Math.random()*emptyFields.length)];
-    }
-
-
-    var mePointer = {
-        getSymbol   : getSymbol,
-        getName     : getName,
-        isComputer  : isComputer,
-        makeMove    : makeMove,
-    };
-
-    init(name, symbol);
-    // specify public interface
-    return mePointer;
-}
+        return this.getFirstEmptyField(sides);
+    },
+});

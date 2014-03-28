@@ -14,6 +14,7 @@ function startNewGame(){
     var players = [
         // new RandomComputerPlayer('david', 'X'),
         new HumanPlayer('david', 'X'),
+        // new HumanPlayer('joshua', 'O'),
         new ComputerPlayer('joshua', 'O'),
     ];
 
