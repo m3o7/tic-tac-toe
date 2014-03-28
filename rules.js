@@ -17,7 +17,7 @@ var Rules = function(winCount){
         // 2. check if there are three items in a row (horizontal, vertical)
         // 3. check for diagonals
         var fields = board.getFields();
-        var any_field_empty = false;
+        var anyFieldEmpty = false;
         for (var i = 0; i < fields.length; i++) {
             if (checkHorizontalLine(fields[i]) || 
                 checkVerticalLine(fields[i]) || 
@@ -26,9 +26,9 @@ var Rules = function(winCount){
                 return true;
             }
             // check if any field is empty, to indicate a tie
-            any_field_empty = any_field_empty || (typeof fields[i].getInstVar('value') === 'undefined');
+            anyFieldEmpty = anyFieldEmpty || (typeof fields[i].getInstVar('value') === 'undefined');
         }
-        if (!any_field_empty) {
+        if (!anyFieldEmpty) {
             // a tie has been reached
             return true;
         }
@@ -38,7 +38,7 @@ var Rules = function(winCount){
     };
 
     // -PRIVATE
-    var checkLine = function(field, next_function){
+    var checkLine = function(field, nextFunction){
         // Return true if there are '3' items in a row of the same kind
         if (typeof field.getInstVar('value') === 'undefined') {
             // skip empty fields
@@ -46,17 +46,17 @@ var Rules = function(winCount){
         }
 
         var counter = me.winCount-1;
-        var current_field = field;
+        var currentField = field;
         while(counter--){
             // check if all fields in one line have the same player -> winner
-            var next_field = current_field[next_function]();
-            if(typeof next_field === 'undefined' ||
-                next_field.getInstVar('value') !== current_field.getInstVar('value')) return false;
-            current_field = next_field;
+            var nextField = currentField[nextFunction]();
+            if(typeof nextField === 'undefined' ||
+                nextField.getInstVar('value') !== currentField.getInstVar('value')) return false;
+            currentField = nextField;
         }
 
         // remember the winner
-        me.winner = current_field.getInstVar('value');
+        me.winner = currentField.getInstVar('value');
         return true;
     };
 

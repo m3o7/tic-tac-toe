@@ -1,6 +1,6 @@
 $(document).ready(function(){
     // wait for the dome to get ready
-    start_new_game();
+    startNewGame();
 
     // listen for the game to end - to restart a new one
     window.addEventListener('game-ended', function(){
@@ -9,7 +9,7 @@ $(document).ready(function(){
 });
 
 var game;
-function start_new_game(){
+function startNewGame(){
     // setup
     var players = [
         new HumanPlayer('david', 'X'),

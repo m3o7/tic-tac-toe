@@ -48,11 +48,12 @@ var GameController = function(players, board, rules, tag){
         if (me.rules.isGameFinished(me.board)) {
             var winner = me.rules.getWinner();
             me.view.showWinner(winner);
-            // TODO: clean up DEBUG ONLY
+
+            // DEBUG ONLY
             if (typeof winner !== 'undefined') {
-                console.debug('game over: ' + winner.name);
-                if (winner.name === 'david'){
-                    console.error('computer has won');
+                console.debug('game over: ' + winner.getName());
+                if (!winner.isComputer()){
+                    console.error('error, human has won');
                     moveHistory.forEach(function(move){
                         console.error(move);
                     });
@@ -60,6 +61,7 @@ var GameController = function(players, board, rules, tag){
             } else {
                 console.debug('game over: tie');
             }
+
             moveHistory = [];
         } else {
             // if not, continue
@@ -69,8 +71,6 @@ var GameController = function(players, board, rules, tag){
 
     var restart = function(){
         // cleaning up and restart the game
-
-        // clear all field values
         me.board.clear();
         me.rules.clear();
         startNewTurn();
@@ -133,7 +133,7 @@ var GameView = function(tag){
             var msg = $(content);
             me.base.append(msg);
 
-            $(window).click(function game_ended(){
+            $(window).click(function gameEnded(){
                 // player acknoledged outcome
 
                 // clean up
