@@ -1,16 +1,18 @@
-<div class="ttt-board">
-    {{#each board}}
-        <div id="ttt-row-{{@index}}">
-        {{#each this}}
-            {{#hasSymbol this}}
-                <div id="ttt-field-{{@index}}" class="ttt-field">
-                    {{{symbol this}}}
-                </div>
-            {{else}}
-                <div id="ttt-field-{{@index}}" class="ttt-active ttt-field">
-                </div>
-            {{/hasSymbol}}
+<table class="ttt-board">
+    <tbody>
+        {{#each board}}
+            <tr id="ttt-row-{{@index}}" class="ttt-row">
+            {{#each this}}
+                {{#hasSymbol this}}
+                    <td id="ttt-field-{{@index}}" class="ttt-field">
+                        {{{symbol this}}}
+                    </td>
+                {{else}}
+                    <td id="ttt-field-{{@index}}" class="ttt-active ttt-field">
+                    </td>
+                {{/hasSymbol}}
+            {{/each}}
+            </tr>
         {{/each}}
-        </div>
-    {{/each}}
-</div>
+    </tbody>
+</table>

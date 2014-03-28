@@ -71,7 +71,7 @@ var ComputerPlayer = function(name, symbol){
     // -PRIVATE
     var getFirstEmptyField = function(fields){
         // Return first empty field - meaning: it can still be played
-        return $.grep(fields, function(field){
+        return fields.filter(function(field){
             return (typeof field.getInstVar('value') === 'undefined')
         }).pop();
     }
@@ -103,7 +103,7 @@ var ComputerPlayer = function(name, symbol){
     var filter = function (rows, counts){
         // filter all rows out that have the wanted 'field-placements'
         // e.g.: a row with 2 of my fields and one open field, so I could win
-        return $.grep(rows, function(row){
+        return rows.filter(function(row){
             // check for an undefined field value
             var undefCount = 0;
             var selfCount = 0;
@@ -299,11 +299,11 @@ var ComputerPlayer = function(name, symbol){
     // -PRIVATE
     var pickOppositeCorner = function(board){
         var corners = getCorners(board);
-        var opponentFields = $.grep(corners, function(field){
+        var opponentFields = corners.filter(function(field){
             // return any field that is an opponents field
             return (typeof field.getInstVar('value') !== 'undefined' && field.getInstVar('value') !== mePointer);
         });
-        var validOppFields = $.grep(opponentFields, function(field){
+        var validOppFields = opponentFields.filter(function(field){
             // return any field that has an empty opposite field
             return (typeof field.getOppisiteField().getInstVar('value') === 'undefined');
         });
@@ -333,7 +333,7 @@ var ComputerPlayer = function(name, symbol){
         // Return a random field - DEBUG ONLY
 
         // find empty fields - implicitly there is always one empty field
-        var emptyFields = $.grep(board.getFields(), function(field){
+        var emptyFields = board.getFields().filter(function(field){
             return (typeof field.getInstVar('value') === 'undefined');
         });
         console.error('strategy is broken - returned a random field to continue game');

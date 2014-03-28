@@ -28,6 +28,13 @@ var BoardController = function(width, height){
         return fields;
     };
 
+    var clear = function(){
+        // reset every field on the board
+        getFields().forEach(function(field){
+            field.setInstVar('value', undefined);
+        });
+    };
+
     // +PUBLIC
     var getWidth = function(){
         return me.width;
@@ -96,6 +103,7 @@ var BoardController = function(width, height){
 
     // specify the public interface
     var mePointer = {
+        clear               : clear,
         getWidth            : getWidth,
         getHeight           : getHeight,
         getView             : getView,
@@ -135,6 +143,17 @@ var BoardView = function(controller){
 
             // send out that the board is ready
             window.dispatchEvent(new Event('board-ready'));
+
+            // vertically center board
+            function alignVertically(){
+                var height = $('.ttt-game').height();
+                $('.ttt-game').offset({top: (($(window).height() - height)/2)});
+            }
+            
+            alignVertically();
+            $(window).resize(function(){
+                alignVertically();
+            });
         });
     }
 
@@ -144,18 +163,9 @@ var BoardView = function(controller){
         render();
     }
 
-    // +PUBLIC
-    var update = function(){
-        // remove old field
-        me.base.remove();
-        // render new state
-        render();
-    }
-
     init(controller);
     // specify public interface
     return {
         addTo  : addTo,
-        update  : update,
     }
 }

@@ -19,6 +19,7 @@ var Field = function(board, value, x, y) {
     // PUBLIC
     var setInstVar = function(name, newValue){
         me[name] = newValue;
+        update();
     };
 
     // +PUBLIC
@@ -92,6 +93,13 @@ var Field = function(board, value, x, y) {
         var x = 1 + (1 - me.x);
         return me.board.getField(y, x);
     };
+
+    // -PRIVATE
+    var update = function(){
+        // update the HTML of this element
+        var newHTML = (typeof me.value === 'undefined') ? '' : me.value.getSymbol();
+        $('#ttt-row-' + me.y + ' #ttt-field-' + me.x).html(newHTML);
+    }
 
     init(board, value, x, y);
     // specify public interface

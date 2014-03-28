@@ -46,7 +46,7 @@ var RandomComputerPlayer = function(name, symbol){
         // Return a random field - DEBUG ONLY
 
         // find empty fields - implicitly there is always one empty field
-        var emptyFields = $.grep(board.getFields(), function(field){
+        var emptyFields = board.getFields().filter(function(field){
             return (typeof field.getInstVar('value') === 'undefined');
         });
         return emptyFields[Math.floor(Math.random()*emptyFields.length)];

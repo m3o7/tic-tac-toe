@@ -1,14 +1,15 @@
 $(document).ready(function(){
     // wait for the dome to get ready
-    start_new_game();
+    startNewGame();
 
     // listen for the game to end - to restart a new one
     window.addEventListener('game-ended', function(){
-        start_new_game();
+        game.restart();
     });
 });
 
-function start_new_game(){
+var game;
+function startNewGame(){
     // setup
     var players = [
         new HumanPlayer('david', 'X'),
@@ -20,5 +21,5 @@ function start_new_game(){
 
     var board = new BoardController(3, 3);
     var rules = new Rules();
-    var game = new GameController(shuffle(players), board, rules, 'body');
+    game = new GameController(shuffle(players), board, rules, 'body');
 }
