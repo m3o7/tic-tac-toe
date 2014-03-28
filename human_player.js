@@ -19,6 +19,12 @@ function HumanPlayer(name, symbol){
         return me.name;
     };
 
+    //  +PUBLIC
+    var isComputer = function(){
+        // HELPER METHOD
+        return false;
+    }
+
     // +PUBLIC
     var makeMove = function(game, board){
         // wait until the user has made his choice
@@ -53,6 +59,7 @@ function HumanPlayer(name, symbol){
     var mePointer = {
         getSymbol   : getSymbol,
         getName     : getName,
+        isComputer  : isComputer,
         makeMove    : makeMove,
     };
 

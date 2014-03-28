@@ -20,6 +20,12 @@ var ComputerPlayer = function(name, symbol){
         return me.name;
     };
 
+    //  +PUBLIC
+    var isComputer = function(){
+        // HELPER METHOD
+        return true;
+    }
+
     // +PUBLIC
     var makeMove = function(game, board){
         // pick a field
@@ -338,6 +344,7 @@ var ComputerPlayer = function(name, symbol){
     var mePointer = {
         getSymbol   : getSymbol,
         getName     : getName,
+        isComputer  : isComputer,
         makeMove    : makeMove,
     };
 

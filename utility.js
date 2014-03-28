@@ -34,8 +34,16 @@ Handlebars.registerHelper('hasSymbol', function(field, block) {
 
 Handlebars.registerHelper('hasWinner', function(player, block) {
     if(typeof player !== 'undefined') {
-        return block.fn(player.getName());
+        return block.fn(player);
     } else {
         return block.inverse();
+    }
+});
+
+Handlebars.registerHelper('isComputer', function(player, block) {
+    if(player.isComputer()) {
+        return block.fn();
+    } else {
+        return block.inverse(player.getName());
     }
 });

@@ -1,6 +1,10 @@
 <div class="ttt-winner">
     {{#hasWinner this}}
-        Congratulations {{this}}!
+        {{#isComputer this}}
+            Sorry, you lost!
+        {{else}}
+            Congratulations {{this}}!
+        {{/isComputer}}
     {{else}}
         Tie!
     {{/hasWinner}}
