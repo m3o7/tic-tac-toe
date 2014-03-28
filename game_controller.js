@@ -1,53 +1,52 @@
 // CONTROLLER ==================================================================
 // responsible to keep track of the game state
-var GameController = function(players, board, rules, tag){
-
-    var me = this;
+var GameController = Class.extend({
 
     // -PRIVATE
-    var init = function(players, board, rules, tag){
-        me.players = players;    // array of players
-        me.currentPlayerID = -1; // pointer to current player
-        me.board = board;
-        me.rules = rules;
+    init: function(players, board, rules, tag){
+        var me = this;
+        this.players = players;    // array of players
+        this.currentPlayerID = -1; // pointer to current player
+        this.board = board;
+        this.rules = rules;
 
-        me.view = new GameView(tag);
+        this.view = new GameView(tag);
 
-        me.view.isReady(function(){
+        this.view.isReady(function(){
             // adding the board
             me.board.getView().addTo(me.view);
 
             // starting the game
             window.addEventListener('board-ready', function startGame(){
-                startNewTurn();
+                me.startNewTurn();
                 // remove this listener, since its only needed for the initial part
                 window.removeEventListener('board-ready', startGame, false);
             });
         });
-    };
+    },
 
     // -PRIVATE
-    var nextPlayer = function(){
+    nextPlayer: function(){
         // count up the internal pointer or reset it to zero
-        me.currentPlayerID = (me.currentPlayerID + 1 == me.players.length) ? 
-            0 : me.currentPlayerID + 1;
-        return me.players[me.currentPlayerID];
-    };
+        this.currentPlayerID = (this.currentPlayerID + 1 == this.players.length) ? 
+            0 : this.currentPlayerID + 1;
+        return this.players[this.currentPlayerID];
+    },
 
     // +PUBLIC
-    var startNewTurn = function(){
+    startNewTurn: function(){
         // play another turn
-        var player = nextPlayer();
-        player.makeMove(mePointer, me.board);
-    };
+        var player = this.nextPlayer();
+        player.makeMove(this, this.board);
+    },
 
     // +PUBLIC
-    var playerMoved = function(){
+    playerMoved: function(){
         // called by the player
         // check if the game has ended
-        if (me.rules.isGameFinished(me.board)) {
-            var winner = me.rules.getWinner();
-            me.view.showWinner(winner);
+        if (this.rules.isGameFinished(this.board)) {
+            var winner = this.rules.getWinner();
+            this.view.showWinner(winner);
 
             // DEBUG ONLY
             if (typeof winner !== 'undefined') {
@@ -65,70 +64,65 @@ var GameController = function(players, board, rules, tag){
             moveHistory = [];
         } else {
             // if not, continue
-            startNewTurn();
+            this.startNewTurn();
         }
-    };
+    },
 
-    var restart = function(){
+    restart: function(){
         // cleaning up and restart the game
-        me.board.clear();
-        me.rules.clear();
-        startNewTurn();
-    };
+        this.board.clear();
+        this.rules.clear();
+        this.startNewTurn();
 
-    // specify public interface
-    var mePointer = {
-        startNewTurn    : startNewTurn,
-        playerMoved     : playerMoved,
-        restart         : restart,
-    };
-
-    init(players, board, rules, tag);
-
-    return mePointer;
-};
+        // vertically re-allign the board all the time
+        $(window).resize(function(){
+            alignVertically();
+        });
+    },
+});
 
 
 // VIEW ========================================================================
 // responsible to render the game
-var GameView = function(tag){
-
-    var me = this;
+var GameView = Class.extend({
 
     // -PRIVATE
-    var init = function(tag){
-        me.tag = $(tag);
-        me.readyCallbacks = [];
+    init: function(tag){
+        var me = this;
+        this.tag = $(tag);
+        this.readyCallbacks = [];
 
         getTemplate('game').then(function(base){
             // render the game
             me.base = $(base);
             me.tag.append(me.base);
-            callReadyCallbacks();
+            me.callReadyCallbacks();
         });
-    };
+    },
 
     // +PUBLIC
-    var getBase = function(){
+    getBase: function(){
         // Return the base HTML-tag (usually 'body') under which this
         // view resides
-        return me.base;
-    };
+        return this.base;
+    },
 
     // +PUBLIC
-    var isReady = function(callback){
-        me.readyCallbacks.push(callback);
-    };
+    isReady: function(callback){
+        // register callback functions for when the game-view is rendered
+        this.readyCallbacks.push(callback);
+    },
 
     // -PRIVATE
-    var callReadyCallbacks = function(){
-        me.readyCallbacks.forEach(function(callback){
+    callReadyCallbacks: function(){
+        this.readyCallbacks.forEach(function(callback){
             callback();
         });
-    };
+    },
 
     // +PUBLIC
-    var showWinner = function(winner){
+    showWinner: function(winner){
+        var me = this;
         getTemplate('winner', winner).then(function(content){
             var msg = $(content);
             me.base.append(msg);
@@ -144,14 +138,5 @@ var GameView = function(tag){
                 window.dispatchEvent(new Event('game-ended'));
             });
         });
-    };
-
-    init(tag);
-
-    // specify public interface
-    return {
-        getBase     : getBase,
-        isReady     : isReady,
-        showWinner  : showWinner,
-    };
-};
+    },
+});

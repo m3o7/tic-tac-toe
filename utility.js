@@ -1,3 +1,13 @@
+// vertically center board
+function alignVertically(){
+    var height = $('.ttt-game').height();
+    $('.ttt-game').offset({top: (($(window).height() - height)/2)});
+}
+
+$(window).resize(function(){
+    alignVertically();
+});
+
 function shuffle(oldArray) {
     var newArray = oldArray.slice();
     var len = newArray.length;
