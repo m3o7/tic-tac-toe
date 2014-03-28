@@ -84,18 +84,18 @@ var ComputerPlayer = function(name, symbol){
         // TODO: remove hard-coding to 3x3 field - make it generic
         return [
             // horizontal
-            [ board.getFieldArray()[0][0], board.getFieldArray()[0][1], board.getFieldArray()[0][2]],
-            [ board.getFieldArray()[1][0], board.getFieldArray()[1][1], board.getFieldArray()[1][2]],
-            [ board.getFieldArray()[2][0], board.getFieldArray()[2][1], board.getFieldArray()[2][2]],
+            [ board.getField(0,0), board.getField(0,1), board.getField(0,2) ],
+            [ board.getField(1,0), board.getField(1,1), board.getField(1,2) ],
+            [ board.getField(2,0), board.getField(2,1), board.getField(2,2) ],
 
             // vertical
-            [ board.getFieldArray()[0][0], board.getFieldArray()[1][0], board.getFieldArray()[2][0]],
-            [ board.getFieldArray()[0][1], board.getFieldArray()[1][1], board.getFieldArray()[2][1]],
-            [ board.getFieldArray()[0][2], board.getFieldArray()[1][2], board.getFieldArray()[2][2]],
+            [ board.getField(0,0), board.getField(1,0), board.getField(2,0) ],
+            [ board.getField(0,1), board.getField(1,1), board.getField(2,1) ],
+            [ board.getField(0,2), board.getField(1,2), board.getField(2,2) ],
 
             // diagonals
-            [ board.getFieldArray()[0][0], board.getFieldArray()[1][1], board.getFieldArray()[2][2]],
-            [ board.getFieldArray()[0][2], board.getFieldArray()[1][1], board.getFieldArray()[2][0]],
+            [ board.getField(0,0), board.getField(1,1), board.getField(2,2) ],
+            [ board.getField(0,2), board.getField(1,1), board.getField(2,0) ],
         ];
     }
 

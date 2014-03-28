@@ -45,28 +45,28 @@ var Field = function(board, value, x, y) {
     // +PUBLIC
     var getRightNeighbor = function(){
         if (hasRightNeighbor()) {
-            return me.board.getFieldArray()[me.y][me.x + 1];
+            return me.board.getField(me.y, me.x + 1);
         }
     };
 
     // +PUBLIC
     var getLeftNeighbor = function(){
         if (hasLeftNeighbor()) {
-            return me.board.getFieldArray()[me.y][me.x - 1];
+            return me.board.getField(me.y, me.x - 1);
         }
     };
 
     // +PUBLIC
     var getLowerNeighbor = function(){
         if (hasLowerNeighbor()) {
-            return me.board.getFieldArray()[me.y + 1][me.x];
+            return me.board.getField(me.y + 1, me.x);
         }
     };
 
     // +PUBLIC
     var getUpperNeighbor = function(){
         if (hasUpperNeighbor()){
-            return me.board.getFieldArray()[me.y -1][me.x];
+            return me.board.getField(me.y -1, me.x);
         }
     };
 
