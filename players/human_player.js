@@ -4,29 +4,29 @@ function HumanPlayer(name, symbol){
     var me = this;
 
     // -PRIVATE
-    var init = function(name, symbol){
+    function init(name, symbol){
         me.name = name;
         me.symbol = symbol;
     };
 
     // +PUBLIC
-    var getSymbol = function(){
+    function getSymbol(){
         return me.symbol;
     };
 
     // +PUBLIC
-    var getName = function(){
+    function getName(){
         return me.name;
     };
 
     //  +PUBLIC
-    var isComputer = function(){
+    function isComputer(){
         // HELPER METHOD
         return false;
     }
 
     // +PUBLIC
-    var makeMove = function(game, board){
+    function makeMove(game, board){
         // wait until the user has made his choice
         $('.ttt-field').click( function(evt) {
             madeMove($(evt.target), board, game);
@@ -34,7 +34,7 @@ function HumanPlayer(name, symbol){
     };
 
     // -PRIVATE
-    var madeMove = function(UIfield, board, game){
+    function madeMove(UIfield, board, game){
         // determine the field that was clicked
         var y = parseInt(UIfield.parent().attr('id').split('-')[2]);
         var x = parseInt(UIfield.attr('id').split('-')[2]);

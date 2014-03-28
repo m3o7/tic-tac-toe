@@ -5,29 +5,29 @@ var ComputerPlayer = function(name, symbol){
     var me = this;
 
     // -PRIVATE
-    var init = function(name, symbol){
+    function init(name, symbol){
         me.name = name;
         me.symbol = symbol;
     };
 
     // +PUBLIC
-    var getSymbol = function(){
+    function getSymbol(){
         return me.symbol;
     };
 
     // +PUBLIC
-    var getName = function(){
+    function getName(){
         return me.name;
     };
 
     //  +PUBLIC
-    var isComputer = function(){
+    function isComputer(){
         // HELPER METHOD
         return true;
     }
 
     // +PUBLIC
-    var makeMove = function(game, board){
+    function makeMove(game, board){
         // pick a field
         var field = pickField(board);
 
@@ -46,7 +46,7 @@ var ComputerPlayer = function(name, symbol){
     }
 
     // -PRIVATE
-    var pickField = function(board){
+    function pickField(board){
         // http://en.wikipedia.org/wiki/Tic-tac-toe#Strategy
         return (
             // 1. Win
@@ -69,7 +69,7 @@ var ComputerPlayer = function(name, symbol){
     }
 
     // -PRIVATE
-    var getFirstEmptyField = function(fields){
+    function getFirstEmptyField(fields){
         // Return first empty field - meaning: it can still be played
         return fields.filter(function(field){
             return (typeof field.getInstVar('value') === 'undefined')
@@ -77,7 +77,7 @@ var ComputerPlayer = function(name, symbol){
     }
 
     // -PRIVATE
-    var getAllRowCombinations = function(board){
+    function getAllRowCombinations(board){
         // Return all Rows (horizontal, vertical, diagonal) that could hold
         // a winning combination
 
@@ -100,7 +100,7 @@ var ComputerPlayer = function(name, symbol){
     }
 
     // -PRIVATE
-    var filter = function (rows, counts){
+    function filter(rows, counts){
         // filter all rows out that have the wanted 'field-placements'
         // e.g.: a row with 2 of my fields and one open field, so I could win
         return rows.filter(function(row){
@@ -125,7 +125,7 @@ var ComputerPlayer = function(name, symbol){
     }
 
     // -PRIVATE
-    var getWinningFields = function(board, counts){
+    function getWinningFields(board, counts){
         // Return all fields that can still be part of a winning strategy
 
         // list all possible rows
@@ -150,7 +150,7 @@ var ComputerPlayer = function(name, symbol){
     }
 
     // -PRIVATE
-    var pickCombination = function(board, counts){
+    function pickCombination(board, counts){
         var combinations = getWinningFields(board, counts);
         if ((typeof combinations !== 'undefined') && combinations.length > 0) {
             return combinations[0];
@@ -158,7 +158,7 @@ var ComputerPlayer = function(name, symbol){
     }
 
     // -PRIVATE
-    var getForks = function(board, counts){
+    function getForks(board, counts){
         var rowComb = getAllRowCombinations(board);
         var rows = filter(rowComb, counts);
 
@@ -195,7 +195,7 @@ var ComputerPlayer = function(name, symbol){
     }
 
     // -PRIVATE
-    var getCorners = function(board){
+    function getCorners(board){
         var corners = [
             board.getField(0, 0),
             board.getField(0, board.getWidth()-1),
@@ -206,7 +206,7 @@ var ComputerPlayer = function(name, symbol){
     }
 
     // -PRIVATE
-    var pickWin = function(board){
+    function pickWin(board){
         return pickCombination(board, {
             undefCount : 1,
             selfCount  : 2,
@@ -215,7 +215,7 @@ var ComputerPlayer = function(name, symbol){
     }
 
     // -PRIVATE
-    var block = function(board){
+    function block(board){
         return pickCombination(board, {
             undefCount : 1,
             selfCount  : 0,
@@ -224,7 +224,7 @@ var ComputerPlayer = function(name, symbol){
     }
 
     // -PRIVATE
-    var fork = function(board){
+    function fork(board){
         // block a forking attempt by the other player
         return getForks(board, {
             undefCount : 2,
@@ -234,7 +234,7 @@ var ComputerPlayer = function(name, symbol){
     }
 
     // -PRIVATE
-    var blockFork = function(board){
+    function blockFork(board){
         // force opponent into defending and make sure that the opponent does not
         // create a fork by doing so
 
@@ -290,14 +290,14 @@ var ComputerPlayer = function(name, symbol){
     }
 
     // -PRIVATE
-    var pickCenter = function(board){
+    function pickCenter(board){
         // return center-field if still open
         var centerOpen = (typeof board.getFieldValue(1,1) === 'undefined');
         return centerOpen ? board.getField(1,1) : undefined;
     }
 
     // -PRIVATE
-    var pickOppositeCorner = function(board){
+    function pickOppositeCorner(board){
         var corners = getCorners(board);
         var opponentFields = corners.filter(function(field){
             // return any field that is an opponents field
@@ -311,13 +311,13 @@ var ComputerPlayer = function(name, symbol){
     }
 
     // -PRIVATE
-    var pickEmptyCorner = function(board){
+    function pickEmptyCorner(board){
         var corners = getCorners(board);
         return getFirstEmptyField(corners);
     }
 
     // -PRIVATE
-    var pickEmptySide = function(board){
+    function pickEmptySide(board){
         var sides = [
             board.getField(0, 1),
             board.getField(1, 0),
@@ -329,7 +329,7 @@ var ComputerPlayer = function(name, symbol){
     }
 
     // -PRIVATE
-    var getRandomField = function(board){
+    function getRandomField(board){
         // Return a random field - DEBUG ONLY
 
         // find empty fields - implicitly there is always one empty field
