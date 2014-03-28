@@ -1,36 +1,58 @@
 // implements the Player-interface for a computer
 // TODO: currently the computer-player is hard-coded to a 3x3 field
-function RandomComputerPlayer(name, symbol){
-    Player.call(this, name, symbol);
-}
+var RandomComputerPlayer = function(name, symbol){
 
-// inherit from Player
-RandomComputerPlayer.prototype = new Player();
+    var me = this;
 
-// correct the constructor pointer because it points to Player
-RandomComputerPlayer.prototype.constructor = RandomComputerPlayer;
+    // -PRIVATE
+    var init = function(name, symbol){
+        me.name = name;
+        me.symbol = symbol;    
+    };
 
-RandomComputerPlayer.prototype.makeMove = function(game, board){
-    // select a random field
-    if (typeof field === 'undefined' || typeof field.getInstVar('value') !== 'undefined') {
-        // something went wrong - pick a random empty field
-        field = this.__get_random_field__(board);
-    }
+    // +PUBLIC
+    var getSymbol = function(){
+        return me.symbol;
+    };
 
-    // commit the pick
-    board.setFieldValue(this, field.getInstVar('y'), field.getInstVar('x'));
+    // +PUBLIC
+    var getName = function(){
+        return me.name;
+    };
 
-    // notify the game-controller about the move
-    // GameController.playerMoved.apply(game);
-    game.playerMoved();
-}
+    // +PUBLIC
+    var makeMove = function(game, board){
+        // select a random field
+        if (typeof field === 'undefined' || typeof field.getInstVar('value') !== 'undefined') {
+            // something went wrong - pick a random empty field
+            field = getRandomField(board);
+        }
 
-RandomComputerPlayer.prototype.__get_random_field__ = function(board){
-    // Return a random field - DEBUG ONLY
+        // commit the pick
+        board.setFieldValue(mePointer, field.getInstVar('y'), field.getInstVar('x'));
 
-    // find empty fields - implicitly there is always one empty field
-    var empty_fields = $.grep(board.getFields(), function(field){
-        return (typeof field.getInstVar('value') === 'undefined');
-    });
-    return empty_fields[Math.floor(Math.random()*empty_fields.length)];
+        // notify the game-controller about the move
+        game.playerMoved();
+    };
+
+    // -PRIVATE
+    var getRandomField = function(board){
+        // Return a random field - DEBUG ONLY
+
+        // find empty fields - implicitly there is always one empty field
+        var emptyFields = $.grep(board.getFields(), function(field){
+            return (typeof field.getInstVar('value') === 'undefined');
+        });
+        return emptyFields[Math.floor(Math.random()*emptyFields.length)];
+    };
+
+    var mePointer = {
+        getSymbol   : getSymbol,
+        getName     : getName,
+        makeMove    : makeMove,
+    };
+
+    init(name, symbol);
+    // specify public interface
+    return mePointer;
 }

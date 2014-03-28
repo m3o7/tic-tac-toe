@@ -4,6 +4,7 @@ var ComputerPlayer = function(name, symbol){
 
     var me = this;
 
+    // -PRIVATE
     var init = function(name, symbol){
         me.name = name;
         me.symbol = symbol;
