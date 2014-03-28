@@ -18,10 +18,10 @@ var GameController = function(players, board, rules, tag){
             me.board.getView().addTo(me.view);
 
             // starting the game
-            window.addEventListener('board-ready', function start_game(){
+            window.addEventListener('board-ready', function startGame(){
                 startNewTurn();
                 // remove this listener, since its only needed for the initial part
-                window.removeEventListener('board-ready', start_game, false);
+                window.removeEventListener('board-ready', startGame, false);
             });
         });
     };
@@ -44,10 +44,6 @@ var GameController = function(players, board, rules, tag){
     // +PUBLIC
     var playerMoved = function(){
         // called by the player
-
-        // re-render the board
-        me.board.getView().update();
-
         // check if the game has ended
         if (me.rules.isGameFinished(me.board)) {
             var winner = me.rules.getWinner();
@@ -67,18 +63,24 @@ var GameController = function(players, board, rules, tag){
             moveHistory = [];
         } else {
             // if not, continue
-            window.addEventListener('board-ready', function start_game(){
-                startNewTurn();
-                // remove this listener, one time only event
-                window.removeEventListener('board-ready', start_game, false);
-            });
+            startNewTurn();
         }
+    };
+
+    var restart = function(){
+        // cleaning up and restart the game
+
+        // clear all field values
+        me.board.clear();
+        me.rules.clear();
+        startNewTurn();
     };
 
     // specify public interface
     var mePointer = {
         startNewTurn    : startNewTurn,
         playerMoved     : playerMoved,
+        restart         : restart,
     };
 
     init(players, board, rules, tag);
@@ -128,14 +130,15 @@ var GameView = function(tag){
     // +PUBLIC
     var showWinner = function(winner){
         getTemplate('winner', winner).then(function(content){
-            me.base.append(content);
+            var msg = $(content);
+            me.base.append(msg);
 
             $(window).click(function game_ended(){
                 // player acknoledged outcome
 
                 // clean up
                 $(window).unbind();
-                me.base.remove();
+                msg.remove();
 
                 // notify game.js to start a new game
                 window.dispatchEvent(new Event('game-ended'));

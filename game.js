@@ -4,10 +4,11 @@ $(document).ready(function(){
 
     // listen for the game to end - to restart a new one
     window.addEventListener('game-ended', function(){
-        start_new_game();
+        game.restart();
     });
 });
 
+var game;
 function start_new_game(){
     // setup
     var players = [
@@ -20,5 +21,5 @@ function start_new_game(){
 
     var board = new BoardController(3, 3);
     var rules = new Rules();
-    var game = new GameController(shuffle(players), board, rules, 'body');
+    game = new GameController(shuffle(players), board, rules, 'body');
 }

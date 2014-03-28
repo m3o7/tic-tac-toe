@@ -48,11 +48,13 @@ var Rules = function(winCount){
         var counter = me.winCount-1;
         var current_field = field;
         while(counter--){
+            // check if all fields in one line have the same player -> winner
             var next_field = current_field[next_function]();
             if(typeof next_field === 'undefined' ||
                 next_field.getInstVar('value') !== current_field.getInstVar('value')) return false;
             current_field = next_field;
         }
+
         // remember the winner
         me.winner = current_field.getInstVar('value');
         return true;
@@ -84,11 +86,17 @@ var Rules = function(winCount){
         return me.winner;
     };
 
+    var clear = function(){
+        // reset the rules for a new game
+        me.winner = undefined;
+    };
+
     init(winCount);
 
     // specify public interface
     return {
         isGameFinished  : isGameFinished,
-        getWinner      : getWinner,
+        getWinner       : getWinner,
+        clear           : clear,
     };
 }
