@@ -7,7 +7,7 @@ var BoardController = function(width, height){
     var me = this;
 
     // -PRIVATE
-    var init = function(width, height){
+    function init(width, height){
         me.width = width;
         me.height = height;
         me.fields = initFields(me.width, me.height);
@@ -17,7 +17,7 @@ var BoardController = function(width, height){
     };
 
     // -PRIVATE
-    var initFields = function(width, height){
+    function initFields(width, height){
         var fields = new Array(width);
         for (var y = 0; y < width; y++) {
             fields[y] = new Array(height);  
@@ -28,7 +28,7 @@ var BoardController = function(width, height){
         return fields;
     };
 
-    var clear = function(){
+    function clear(){
         // reset every field on the board
         getFields().forEach(function(field){
             field.setInstVar('value', undefined);
@@ -36,32 +36,32 @@ var BoardController = function(width, height){
     };
 
     // +PUBLIC
-    var getWidth = function(){
+    function getWidth(){
         return me.width;
     };
 
     // +PUBLIC
-    var getHeight = function(){
+    function getHeight(){
         return me.height;
     };
 
     // +PUBLIC
-    var getView = function(){
+    function getView(){
         return me.view;
     };
 
     // +PUBLIC
-    var getField = function(y, x){
+    function getField(y, x){
         return me.fields[y][x];
     };
 
     // +PUBLIC
-    var getFieldValue = function(y, x){
+    function getFieldValue(y, x){
         return getField(y, x).getInstVar('value');
     };
 
     // +PUBLIC
-    var setFieldValue = function(newValue, y, x){
+    function setFieldValue(newValue, y, x){
         me.fields[y][x].setInstVar('value', newValue);
 
         // DEBUG ONLY - to keep the move history
@@ -69,14 +69,14 @@ var BoardController = function(width, height){
     };
 
     // +PUBLIC
-    var setTempFieldValue = function(newValue, y, x){
+    function setTempFieldValue(newValue, y, x){
         // for simulation purposes - simulate future move(s)
         me.tempFields.push(me.fields[y][x]);
         me.fields[y][x].setInstVar('value', newValue);
     };
 
     // +PUBLIC
-    var resetTempFields = function(){
+    function resetTempFields(){
         // for simulation purposes - reset the future fields
         me.tempFields.forEach(function(field){
             field.setInstVar('value', undefined);
@@ -85,7 +85,7 @@ var BoardController = function(width, height){
     };
 
     // +PUBLIC
-    var getFields = function(){
+    function getFields(){
         // Return list of all fields, (for convinient iteration)
         var fieldIter = [];
         me.fields.forEach(function(row){
@@ -97,7 +97,7 @@ var BoardController = function(width, height){
     };
 
     // +PUBLIC
-    var getFieldArray = function(){
+    function getFieldArray(){
         return me.fields;
     };
 
@@ -127,12 +127,12 @@ var BoardView = function(controller){
     var me = this;
 
     // -PRIVATE
-    var init = function(controller){
+    function init(controller){
         me.controller = controller;
     }
 
     // -PRIVATE
-    var render = function(){
+    function render(){
         // render initially
         getTemplate('board', {
                     board: me.controller.getFieldArray()
@@ -158,7 +158,7 @@ var BoardView = function(controller){
     }
 
     // +PUBLIC
-    var addTo = function(view){
+    function addTo(view){
         me.tag = view.getBase();
         render();
     }

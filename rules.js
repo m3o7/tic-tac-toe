@@ -6,13 +6,13 @@ var Rules = function(winCount){
 
     var me = this;
 
-    var init = function(winCount){
+    function init(winCount){
         // number of items (in a row) needed to win 
         me.winCount = (typeof winCount === 'undefined') ? 3 : winCount;
     };
 
     // +PUBLIC
-    var isGameFinished = function(board){
+    function isGameFinished(board){
         // 1. check if all fields are filled (game ends, no matter what)
         // 2. check if there are three items in a row (horizontal, vertical)
         // 3. check for diagonals
@@ -38,7 +38,7 @@ var Rules = function(winCount){
     };
 
     // -PRIVATE
-    var checkLine = function(field, nextFunction){
+    function checkLine(field, nextFunction){
         // Return true if there are '3' items in a row of the same kind
         if (typeof field.getInstVar('value') === 'undefined') {
             // skip empty fields
@@ -61,32 +61,32 @@ var Rules = function(winCount){
     };
 
     // -PRIVATE
-    var checkHorizontalLine = function(field){
+    function checkHorizontalLine(field){
         return checkLine(field, 'getRightNeighbor');
     };
 
     // -PRIVATE
-    var checkVerticalLine = function(field){
+    function checkVerticalLine(field){
         return checkLine(field, 'getLowerNeighbor');
     };
 
     // -PRIVATE
-    var checkDiagonaleDownLine = function(field){
+    function checkDiagonaleDownLine(field){
         return checkLine(field, 'getRightLowerNeighbor');
     };
 
     // -PRIVATE
-    var checkDiagonaleUpLine = function(field){
+    function checkDiagonaleUpLine(field){
         return checkLine(field, 'getRightUpperNeighbor');
     };
 
     // +PUBLIC
-    var getWinner = function(){
+    function getWinner(){
         // Return the winner of the game. If there is a tie return null
         return me.winner;
     };
 
-    var clear = function(){
+    function clear(){
         // reset the rules for a new game
         me.winner = undefined;
     };

@@ -5,7 +5,7 @@ var GameController = function(players, board, rules, tag){
     var me = this;
 
     // -PRIVATE
-    var init = function(players, board, rules, tag){
+    function init(players, board, rules, tag){
         me.players = players;    // array of players
         me.currentPlayerID = -1; // pointer to current player
         me.board = board;
@@ -27,7 +27,7 @@ var GameController = function(players, board, rules, tag){
     };
 
     // -PRIVATE
-    var nextPlayer = function(){
+    function nextPlayer(){
         // count up the internal pointer or reset it to zero
         me.currentPlayerID = (me.currentPlayerID + 1 == me.players.length) ? 
             0 : me.currentPlayerID + 1;
@@ -35,14 +35,14 @@ var GameController = function(players, board, rules, tag){
     };
 
     // +PUBLIC
-    var startNewTurn = function(){
+    function startNewTurn(){
         // play another turn
         var player = nextPlayer();
         player.makeMove(mePointer, me.board);
     };
 
     // +PUBLIC
-    var playerMoved = function(){
+    function playerMoved(){
         // called by the player
         // check if the game has ended
         if (me.rules.isGameFinished(me.board)) {
@@ -69,7 +69,7 @@ var GameController = function(players, board, rules, tag){
         }
     };
 
-    var restart = function(){
+    function restart(){
         // cleaning up and restart the game
         me.board.clear();
         me.rules.clear();
@@ -96,7 +96,7 @@ var GameView = function(tag){
     var me = this;
 
     // -PRIVATE
-    var init = function(tag){
+    function init(tag){
         me.tag = $(tag);
         me.readyCallbacks = [];
 
@@ -109,26 +109,27 @@ var GameView = function(tag){
     };
 
     // +PUBLIC
-    var getBase = function(){
+    function getBase(){
         // Return the base HTML-tag (usually 'body') under which this
         // view resides
         return me.base;
     };
 
     // +PUBLIC
-    var isReady = function(callback){
+    function isReady(callback){
+        // register callback functions for when the game-view is rendered
         me.readyCallbacks.push(callback);
     };
 
     // -PRIVATE
-    var callReadyCallbacks = function(){
+    function callReadyCallbacks(){
         me.readyCallbacks.forEach(function(callback){
             callback();
         });
     };
 
     // +PUBLIC
-    var showWinner = function(winner){
+    function showWinner(winner){
         getTemplate('winner', winner).then(function(content){
             var msg = $(content);
             me.base.append(msg);
