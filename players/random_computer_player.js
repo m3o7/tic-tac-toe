@@ -5,29 +5,29 @@ var RandomComputerPlayer = function(name, symbol){
     var me = this;
 
     // -PRIVATE
-    var init = function(name, symbol){
+    function init(name, symbol){
         me.name = name;
         me.symbol = symbol;    
     };
 
     // +PUBLIC
-    var getSymbol = function(){
+    function getSymbol(){
         return me.symbol;
     };
 
     // +PUBLIC
-    var getName = function(){
+    function getName(){
         return me.name;
     };
 
     //  +PUBLIC
-    var isComputer = function(){
+    function isComputer(){
         // HELPER METHOD
         return true;
     }
 
     // +PUBLIC
-    var makeMove = function(game, board){
+    function makeMove(game, board){
         // select a random field
         if (typeof field === 'undefined' || typeof field.getInstVar('value') !== 'undefined') {
             // something went wrong - pick a random empty field
@@ -42,7 +42,7 @@ var RandomComputerPlayer = function(name, symbol){
     };
 
     // -PRIVATE
-    var getRandomField = function(board){
+    function getRandomField(board){
         // Return a random field - DEBUG ONLY
 
         // find empty fields - implicitly there is always one empty field

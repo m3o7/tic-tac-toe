@@ -3,7 +3,7 @@ var Field = function(board, value, x, y) {
     var me = this;
 
     // -PRIVATE
-    var init = function(board, value, x, y){
+    function init(board, value, x, y){
         me.board = board;
         me.value = value;
         me.x = x;
@@ -11,67 +11,67 @@ var Field = function(board, value, x, y) {
     };
 
     // +PUBLIC
-    var getInstVar = function(name){
+    function getInstVar(name){
         // return value of instance variable
         return me[name];
     };
 
     // PUBLIC
-    var setInstVar = function(name, newValue){
+    function setInstVar(name, newValue){
         me[name] = newValue;
         update();
     };
 
     // +PUBLIC
-    var hasRightNeighbor = function(){
+    function hasRightNeighbor(){
         return me.board.getFieldArray()[me.y].length - 1 > me.x;
     };
 
     // +PUBLIC
-    var hasLeftNeighbor = function(){
+    function hasLeftNeighbor(){
         return me.x > 0;
     };
 
     // +PUBLIC
-    var hasLowerNeighbor = function(){
+    function hasLowerNeighbor(){
         return me.board.getFieldArray().length - 1 > me.y;
     };
 
     // +PUBLIC
-    var hasUpperNeighbor = function(){
+    function hasUpperNeighbor(){
         return me.y > 0;
     };
 
     // +PUBLIC
-    var getRightNeighbor = function(){
+    function getRightNeighbor(){
         if (hasRightNeighbor()) {
             return me.board.getField(me.y, me.x + 1);
         }
     };
 
     // +PUBLIC
-    var getLeftNeighbor = function(){
+    function getLeftNeighbor(){
         if (hasLeftNeighbor()) {
             return me.board.getField(me.y, me.x - 1);
         }
     };
 
     // +PUBLIC
-    var getLowerNeighbor = function(){
+    function getLowerNeighbor(){
         if (hasLowerNeighbor()) {
             return me.board.getField(me.y + 1, me.x);
         }
     };
 
     // +PUBLIC
-    var getUpperNeighbor = function(){
+    function getUpperNeighbor(){
         if (hasUpperNeighbor()){
             return me.board.getField(me.y -1, me.x);
         }
     };
 
     // +PUBLIC
-    var getRightUpperNeighbor = function(){
+    function getRightUpperNeighbor(){
         var right = getRightNeighbor();
         if (typeof right !== 'undefined') {
             return right.getUpperNeighbor();
@@ -79,7 +79,7 @@ var Field = function(board, value, x, y) {
     };
 
     // +PUBLIC
-    var getRightLowerNeighbor = function(){
+    function getRightLowerNeighbor(){
         var lower = getLowerNeighbor();
         if (typeof lower !== 'undefined') {
             return lower.getRightNeighbor();
@@ -87,7 +87,7 @@ var Field = function(board, value, x, y) {
     };
 
     // +PUBLIC
-    var getOppisiteField = function(){
+    function getOppisiteField(){
         // calculate the opposite
         var y = 1 + (1 - me.y);
         var x = 1 + (1 - me.x);
@@ -95,7 +95,7 @@ var Field = function(board, value, x, y) {
     };
 
     // -PRIVATE
-    var update = function(){
+    function update(){
         // update the HTML of this element
         var newHTML = (typeof me.value === 'undefined') ? '' : me.value.getSymbol();
         $('#ttt-row-' + me.y + ' #ttt-field-' + me.x).html(newHTML);
